@@ -13,6 +13,8 @@
 		17A2FBC9270BA2BD00EBB392 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBC7270BA2BD00EBB392 /* Main.storyboard */; };
 		17A2FBCB270BA2BF00EBB392 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBCA270BA2BF00EBB392 /* Assets.xcassets */; };
 		17A2FBCE270BA2BF00EBB392 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBCC270BA2BF00EBB392 /* LaunchScreen.storyboard */; };
+		17A2FBD7270BA5F200EBB392 /* itunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBD6270BA5F200EBB392 /* itunes.png */; };
+		DD59230198B507BDB20F7602 /* Pods_PlaySwap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB10065EF5BC01412FE25C9 /* Pods_PlaySwap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,10 @@
 		17A2FBCA270BA2BF00EBB392 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17A2FBCD270BA2BF00EBB392 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17A2FBCF270BA2BF00EBB392 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		17A2FBD6270BA5F200EBB392 /* itunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itunes.png; sourceTree = "<group>"; };
+		5FB10065EF5BC01412FE25C9 /* Pods_PlaySwap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlaySwap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		71D249A4AB4466BC0704AD1D /* Pods-PlaySwap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlaySwap.debug.xcconfig"; path = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.debug.xcconfig"; sourceTree = "<group>"; };
+		C7C2D12D98C7B7938B84FAC5 /* Pods-PlaySwap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlaySwap.release.xcconfig"; path = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD59230198B507BDB20F7602 /* Pods_PlaySwap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,8 +47,11 @@
 		17A2FBB5270BA2BD00EBB392 = {
 			isa = PBXGroup;
 			children = (
+				17A2FBD5270BA5E800EBB392 /* Resources */,
 				17A2FBC0270BA2BD00EBB392 /* PlaySwap */,
 				17A2FBBF270BA2BD00EBB392 /* Products */,
+				74A6C31B2A539A1E1BF99DBF /* Pods */,
+				D0B0D6B33E0EF7BADC257057 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +77,32 @@
 			path = PlaySwap;
 			sourceTree = "<group>";
 		};
+		17A2FBD5270BA5E800EBB392 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				17A2FBD6270BA5F200EBB392 /* itunes.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		74A6C31B2A539A1E1BF99DBF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				71D249A4AB4466BC0704AD1D /* Pods-PlaySwap.debug.xcconfig */,
+				C7C2D12D98C7B7938B84FAC5 /* Pods-PlaySwap.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		D0B0D6B33E0EF7BADC257057 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB10065EF5BC01412FE25C9 /* Pods_PlaySwap.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,9 +110,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17A2FBD2270BA2BF00EBB392 /* Build configuration list for PBXNativeTarget "PlaySwap" */;
 			buildPhases = (
+				ED48568FED86CDBBFE3D7B16 /* [CP] Check Pods Manifest.lock */,
 				17A2FBBA270BA2BD00EBB392 /* Sources */,
 				17A2FBBB270BA2BD00EBB392 /* Frameworks */,
 				17A2FBBC270BA2BD00EBB392 /* Resources */,
+				78269353388AD21099103399 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -126,12 +164,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				17A2FBCE270BA2BF00EBB392 /* LaunchScreen.storyboard in Resources */,
+				17A2FBD7270BA5F200EBB392 /* itunes.png in Resources */,
 				17A2FBCB270BA2BF00EBB392 /* Assets.xcassets in Resources */,
 				17A2FBC9270BA2BD00EBB392 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		78269353388AD21099103399 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PlaySwap/Pods-PlaySwap-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PlaySwap/Pods-PlaySwap-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PlaySwap/Pods-PlaySwap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED48568FED86CDBBFE3D7B16 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PlaySwap-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		17A2FBBA270BA2BD00EBB392 /* Sources */ = {
@@ -284,11 +365,13 @@
 		};
 		17A2FBD3270BA2BF00EBB392 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 71D249A4AB4466BC0704AD1D /* Pods-PlaySwap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4SSQ3NUFVX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PlaySwap/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -311,11 +394,13 @@
 		};
 		17A2FBD4270BA2BF00EBB392 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7C2D12D98C7B7938B84FAC5 /* Pods-PlaySwap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4SSQ3NUFVX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PlaySwap/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
