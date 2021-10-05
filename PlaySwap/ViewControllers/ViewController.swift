@@ -76,7 +76,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
         //SPOTIFY SHIT (gets environment variables)
         spotify = SpotifyAPI(
             authorizationManager: AuthorizationCodeFlowManager(
-                clientId: getEnvironmentVar("CLIENT_ID") ?? "", clientSecret: getEnvironmentVar("CLIENT_SECRET") ?? ""
+                clientId: UIApplication.clientId ?? "", clientSecret: UIApplication.clientSecret ?? ""
             )
         )
         //JUST MAKING WEBVIEW VISIBLE
@@ -133,6 +133,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     
                     if(type == .playlist) {
                         let bestResult = results.playlists!.items[0]
+                        let uri = bestResult.uri
                         print("******************************************************")
                         print("BEST SEARCH RESULT (PLAYLIST): \(bestResult.name) by \(bestResult.owner!.displayName ?? "")")
                         print("API ENDPOINT \(bestResult.items.href)")
@@ -140,6 +141,9 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         //prints out all elements in playlist
 //                       self.spotify.playlistItems(bestResult)
                         print("******************************************************")
+//                        print(bestResult)
+//                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
+                        self.getPlayListItemsFrom(uri: uri)
                         
                     } else if (type == .track) {
                         let bestResult = results.tracks!.items[0]
@@ -157,6 +161,33 @@ class ViewController: UIViewController, WKNavigationDelegate {
             .store(in: &self.cancellables)
 //        return returnVal
     }
+    func getPlayListItemsFrom(uri: String) {
+        self.spotify.playlistItems(uri as! SpotifyURIConvertible).sink(
+            receiveCompletion: { completion in
+//                    return completion
+                print("completion result: \(completion)")
+                if case .failure(let error) = completion {
+                                    print("COULD NOT GET PLAYLIST INFO PROPERLY")
+                                }
+            },
+            receiveValue: { results in
+//                    print(results.tracks?.items[0])
+                //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
+                var songArr: [SpotifyURIConvertible] = []
+//                print()
+                for n in 0...results.items.count-1 {
+                    //ADD EVERYSONG INTO AN ARRAY
+                    songArr.append((results.items[n].item?.uri as! String) as! SpotifyURIConvertible)
+                }
+//                results.items
+                print("* total amount of songs loaded in palylist: \(songArr.count)")
+//                print(songArr)
+                //EXAMPLE TO ADD MULTIPLE SONGS TO PLAYLIST
+//                self.addSongsToPlaylist(playlist: "spotify:playlist:78aV5gMM133PC1AOFhqe2v", uris: songArr)
+            }
+        )
+        .store(in: &self.cancellables)
+    }
     func createPlaylist(name: String, isPublic: Bool, isCollaborative: Bool, description: String) {
         self.spotify.currentUserProfile().sink(
             receiveCompletion: { completion in
@@ -166,6 +197,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
             },
             receiveValue: { results in
                 //use results.href to get API endpoint for this user
+                print(results)
                 let user = results.uri as! SpotifyURIConvertible
                 print("current user profile url: \(user.uri)")
 //                let uri: SpotifyURIConvertible
@@ -183,7 +215,9 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         let playlistURI = results2.uri as! SpotifyURIConvertible
                         print("* playlist internal url: \(playlistURI)")
                         //Here I add 90210 by travis scott to playlist as an example:
-                        self.addSongToPlaylist(playlistURI: playlistURI, songURI: "spotify:track:51EC3I1nQXpec4gDk0mQyP" as! SpotifyURIConvertible)
+//                        self.addSongToPlaylist(playlistURI: playlistURI, songURI: "spotify:track:51EC3I1nQXpec4gDk0mQyP" as! SpotifyURIConvertible)
+                        //here is an example of multiple at once (should add 90210, zeze, shoota, etc)
+                        self.addSongsToPlaylist(playlist: playlistURI, uris: ["spotify:track:51EC3I1nQXpec4gDk0mQyP","spotify:track:0FZ4Dmg8jJJAPJnvBIzD9z", "spotify:track:2BJSMvOGABRxokHKB0OI8i"])
                     }
                 )
                 .store(in: &self.cancellables)
@@ -207,7 +241,18 @@ class ViewController: UIViewController, WKNavigationDelegate {
         .store(in: &self.cancellables)
     }
     func addSongsToPlaylist(playlist: SpotifyURIConvertible, uris: [SpotifyURIConvertible]) {
-//        self.spotify.addToPlaylist(<#T##playlist: SpotifyURIConvertible##SpotifyURIConvertible#>, uris: <#T##[SpotifyURIConvertible]#>, position: <#T##Int?#>)
+        self.spotify.addToPlaylist(playlist, uris: uris).sink(
+            receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                                    print("COULD NOT ADD SONGS TO PLAYLIST")
+                                }
+            },
+            receiveValue: { results in
+                print("* successfully added song to playlist!")
+                
+            }
+        )
+        .store(in: &self.cancellables)
     }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         //WEBVIEW HAS STARTED LOADING GOOGLE.COM USE THIS TO GET AUTH CODE
@@ -223,9 +268,10 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     case .finished:
                         print("successfully authorized")
                     //TESTING PLAYLIST CREATION
-                    self.createPlaylist(name: "test playlist?", isPublic: true, isCollaborative: false, description: "test playlist -- ignore")
+                    self.createPlaylist(name: "test playlist", isPublic: true, isCollaborative: false, description: "test playlist -- ignore")
                     //EXAMPLE SEARCH FUNCTION
-                    self.searchForSong(query: "90210 Travis Scott", type: .track)
+//                    self.searchForSong(query: "shoota playboi carti", type: .track)
+                    self.searchForSong(query: "bb shit", type: .playlist)
                     case .failure(let error):
                         if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
                             print("The user denied the authorization request")
@@ -338,6 +384,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
 //        }
     func getEnvironmentVar(_ name: String) -> String? {
         guard let rawValue = getenv(name) else { return nil }
+        
         return String(utf8String: rawValue)
     }
     @objc func logginPressed(_ sender: UIButton) {
@@ -440,4 +487,12 @@ extension UIView {
             self.alpha = 0.3
     }, completion: completion)
    }
+}
+extension UIApplication {
+    static var clientId: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CLIENT_ID") as? String
+    }
+    static var clientSecret: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CLIENT_SECRET") as? String
+    }
 }
