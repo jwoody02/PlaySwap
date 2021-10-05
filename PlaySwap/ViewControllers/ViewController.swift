@@ -180,7 +180,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     songArr.append((results.items[n].item?.uri as! String) as! SpotifyURIConvertible)
                 }
 //                results.items
-                print("* total amount of songs loaded in palylist: \(songArr.count)")
+                print("* total amount of songs loaded in playlist: \(songArr.count)")
 //                print(songArr)
                 //EXAMPLE TO ADD MULTIPLE SONGS TO PLAYLIST
 //                self.addSongsToPlaylist(playlist: "spotify:playlist:78aV5gMM133PC1AOFhqe2v", uris: songArr)
