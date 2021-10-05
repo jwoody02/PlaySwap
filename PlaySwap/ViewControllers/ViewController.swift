@@ -10,7 +10,7 @@ import AnimatedGradientView
 import Combine
 import SpotifyWebAPI
 import WebKit
-//import Spotif
+
 class ViewController: UIViewController, WKNavigationDelegate {
     var iTunesImage = UIImageView()
     var emailField = UITextField()
@@ -68,29 +68,29 @@ class ViewController: UIViewController, WKNavigationDelegate {
         loginButton.frame = CGRect(x: 50, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width - 100, height: 50)
         loginButton.addTarget(self, action: #selector(logginPressed(_:)), for: .touchUpInside)
         //Looks for single or multiple taps.
-             let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-
-            //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-            //tap.cancelsTouchesInView = false
-
-            view.addGestureRecognizer(tap)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
         
+        
+        //SPOTIFY SHIT
         spotify = SpotifyAPI(
             authorizationManager: AuthorizationCodeFlowManager(
                 clientId: getEnvironmentVar("CLIENT_ID") ?? "", clientSecret: getEnvironmentVar("CLIENT_SECRET") ?? ""
             )
         )
-        //WE CAN USE THIS URL TO AUTHENTICATE USER
+        //JUST MAKING WEBVIEW VISIBLE
         webView.navigationDelegate = self
         view.addSubview(webView)
-//        webView.
         webView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        
+        //ACTUALLY LOAD AUTHENTICATION URL & LOAD INTO APP
         loadSpotifyLogin()
         
-//        SpotifyWebAPI.
     }
+    
     func loadSpotifyLogin() {
         DispatchQueue.main.async {
+            //USE API TO GET AN AUTHORIZATION URL FOR US USING SCOPES
             let authorizationURL = self.spotify.authorizationManager.makeAuthorizationURL(
                 redirectURI: URL(string: "https://www.google.com")!,
                 showDialog: false,
@@ -102,14 +102,44 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     .userFollowModify
                 ]
             )!
+            
+            //MAKE SURE AUTHENTICATION URL IS VALID
             if(authorizationURL.absoluteString.contains("spotify")) {
                 self.webView.load(URLRequest(url: authorizationURL))
             }
         }
         
     }
+    func searchForSong(query: String) {
+        //INCLUDE ARTIST SO: GOOSEBUMPS TRAVIS SCOTT
+        var returnVal: SpotifyWebAPI.Track!
+        
+        self.spotify.search(query: query, categories: [.track])
+            .sink(
+                receiveCompletion: { completion in
+//                    return completion
+                    print("completion result: \(completion)")
+                },
+                receiveValue: { results in
+//                    print(results.tracks?.items[0])
+                    //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
+                    if(results.tracks! != nil) {
+                        let bestResult = results.tracks!.items[0]
+                        print("******************************************************")
+                        print("BEST SEARCH RESULT: \(bestResult.name) by \(bestResult.artists![0].name)")
+                        print("******************************************************")
+                    } else {
+                        print("error, 0 search results")
+                        returnVal = SpotifyWebAPI.Track(name: "ERROR WITH SEARCH RESULTS", isLocal: true, isExplicit: false)
+                    }
+                    
+                }
+            )
+            .store(in: &self.cancellables)
+//        return returnVal
+    }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-//        if(
+        //WEBVIEW HAS STARTED LOADING GOOGLE.COM USE THIS TO GET AUTH CODE
         if ((webView.url?.absoluteString as! String).contains("google") && (webView.url?.absoluteString as! String).contains("accounts.spotify") == false) {
             print("* spotify redirect detected")
             webView.isHidden = true
@@ -121,6 +151,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 switch completion {
                     case .finished:
                         print("successfully authorized")
+                    self.searchForSong(query: "90210 Travis Scott")
                     case .failure(let error):
                         if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
                             print("The user denied the authorization request")
