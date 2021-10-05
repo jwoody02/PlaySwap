@@ -1,16 +1,20 @@
 PODS:
   - AnimatedGradientView (3.1.0)
+  - KeychainAccess (4.2.2)
 
 DEPENDENCIES:
   - AnimatedGradientView
+  - KeychainAccess
 
 SPEC REPOS:
   trunk:
     - AnimatedGradientView
+    - KeychainAccess
 
 SPEC CHECKSUMS:
   AnimatedGradientView: f249740238c6b491a10d505ab06bb98d897ca3a7
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
 
-PODFILE CHECKSUM: b3538fe6792115a713f1d30b2b62a92b19b5a461
+PODFILE CHECKSUM: 202bcf07845f80117d2ac47e662ee5d1a74c4e99
 
 COCOAPODS: 1.11.2

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		173317BB270BEB88007523D7 /* Spotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173317BA270BEB88007523D7 /* Spotify.swift */; };
 		1756F18E270BC63C00529C0D /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 1756F18D270BC63C00529C0D /* SpotifyAPI */; };
 		17A2FBC2270BA2BD00EBB392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */; };
 		17A2FBC4270BA2BD00EBB392 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		173317BA270BEB88007523D7 /* Spotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spotify.swift; sourceTree = "<group>"; };
 		17A2FBBE270BA2BD00EBB392 /* PlaySwap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlaySwap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		173317B9270BEB7E007523D7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				173317BA270BEB88007523D7 /* Spotify.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		1756EE5C270BBE8700529C0D /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +86,7 @@
 		17A2FBC0270BA2BD00EBB392 /* PlaySwap */ = {
 			isa = PBXGroup;
 			children = (
+				173317B9270BEB7E007523D7 /* Extensions */,
 				1756EE5C270BBE8700529C0D /* ViewControllers */,
 				17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */,
 				17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */,
@@ -236,6 +247,7 @@
 			files = (
 				17A2FBC6270BA2BD00EBB392 /* ViewController.swift in Sources */,
 				17A2FBC2270BA2BD00EBB392 /* AppDelegate.swift in Sources */,
+				173317BB270BEB88007523D7 /* Spotify.swift in Sources */,
 				17A2FBC4270BA2BD00EBB392 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

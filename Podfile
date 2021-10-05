@@ -7,4 +7,5 @@ target 'PlaySwap' do
 	
   # Pods for PlaySwap
   pod "AnimatedGradientView"
+  pod 'KeychainAccess'
 end

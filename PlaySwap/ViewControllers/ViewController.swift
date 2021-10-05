@@ -110,28 +110,42 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
         
     }
-    func searchForSong(query: String) {
+    func searchForSong(query: String, type: IDCategory) {
         //INCLUDE ARTIST SO: GOOSEBUMPS TRAVIS SCOTT
         var returnVal: SpotifyWebAPI.Track!
         
-        self.spotify.search(query: query, categories: [.track])
+        self.spotify.search(query: query, categories: [type])
             .sink(
                 receiveCompletion: { completion in
 //                    return completion
                     print("completion result: \(completion)")
+                    if case .failure(let error) = completion {
+                                        print("COULD NOT SEARCH PROPERLY")
+                                    }
                 },
                 receiveValue: { results in
 //                    print(results.tracks?.items[0])
                     //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
-                    if(results.tracks! != nil) {
+                    
+                    if(type == .playlist) {
+                        let bestResult = results.playlists!.items[0]
+                        print("******************************************************")
+                        print("BEST SEARCH RESULT (PLAYLIST): \(bestResult.name) by \(bestResult.owner!.displayName ?? "")")
+                        print("API ENDPOINT \(bestResult.items.href)")
+                        print("Cover photo: \(bestResult.images[0].url)")
+                        //prints out all elements in playlist
+//                       self.spotify.playlistItems(bestResult)
+                        print("******************************************************")
+                        
+                    } else if (type == .track) {
                         let bestResult = results.tracks!.items[0]
                         print("******************************************************")
-                        print("BEST SEARCH RESULT: \(bestResult.name) by \(bestResult.artists![0].name)")
+                        print("BEST SEARCH RESULT (TRACK): \(bestResult.name) by \(bestResult.artists![0].name)")
+                        print("Cover photo: \(bestResult.album?.images![0].url.absoluteString as! String)")
                         print("******************************************************")
-                    } else {
-                        print("error, 0 search results")
-                        returnVal = SpotifyWebAPI.Track(name: "ERROR WITH SEARCH RESULTS", isLocal: true, isExplicit: false)
                     }
+                    
+                    
                     
                 }
             )
@@ -151,13 +165,16 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 switch completion {
                     case .finished:
                         print("successfully authorized")
-                    self.searchForSong(query: "90210 Travis Scott")
+                    //EXAMPLE SEARCH FUNCTION
+                    self.searchForSong(query: "90210 Travis Scott", type: .track)
                     case .failure(let error):
                         if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
                             print("The user denied the authorization request")
                         }
                         else {
                             print("couldn't authorize application: \(error)")
+                            
+                            //CLEAR COOKIES AND SHOW LOGIN PAGE
                             let dataStore = WKWebsiteDataStore.default()
                             DispatchQueue.main.async {
                                 dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { (records) in

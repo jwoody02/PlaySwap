@@ -7,67 +7,95 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B8B3316E649C9D3D6D00108BE1C8B1F /* Collection+UniqueMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6ED17ED028EEB21B4908A0DC90231C /* Collection+UniqueMap.swift */; };
-		0FDE9E9584ED0520FF5A2736C8FE2363 /* Pods-PlaySwap-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FCDE180748408788A3390B532C15F /* Pods-PlaySwap-dummy.m */; };
-		12A96BB0F81805DA8CFF6AE0EA51CB04 /* AnimatedGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A61C4F4FC8F767BD2CBBFBA78D480A /* AnimatedGradientView.swift */; };
-		1C7C012461E216105952A727909753E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		24EC1B56DEED857BC58563B7BCEA5917 /* Pods-PlaySwap-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C3DA86CB61252133EA709D8D0546B783 /* Pods-PlaySwap-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0B8B3316E649C9D3D6D00108BE1C8B1F /* Collection+UniqueMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5571DC6A7AC983A6CBD29EA8DAF9931E /* Collection+UniqueMap.swift */; };
+		12A96BB0F81805DA8CFF6AE0EA51CB04 /* AnimatedGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2C74AA4EF4C35A7A1A16EE62507740 /* AnimatedGradientView.swift */; };
+		2C9022F02292EA5FB21AB5FFC27D05F8 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C62CF45D015691DA14AB4B7464F4F5 /* Keychain.swift */; };
+		34E7811638053E4348A35CCD7205F0D0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		3B31AEBB59C015805446CA7707BA0998 /* Pods-PlaySwap-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F1FCDE180748408788A3390B532C15F /* Pods-PlaySwap-dummy.m */; };
 		46CCD4EC409B3FD5275E06D0880E4D28 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		564877FA7D05AFD19890205A2CEFD41C /* AnimatedGradientViewColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B882520CC07B46144265EBFD2FA3C479 /* AnimatedGradientViewColor.swift */; };
-		64A548BFB4631DAE16C0A7962A83C452 /* AnimatedGradientView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 539AB69E5B6EDFD6A314B2BACB0037BB /* AnimatedGradientView-dummy.m */; };
-		6C2C583571914F59F98E84C9156D7285 /* AnimatedGradientViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97541B451B49896EA7171C2A84000335 /* AnimatedGradientViewAnimation.swift */; };
-		74DCAFF528DD35B4F751A0774EDFF5C4 /* AnimatedGradientView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E9AA23009CE0151E665B1B764D71E7A /* AnimatedGradientView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AED9B7ABCB238660A995AD1DE6991FFD /* RegularExpressionMatchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51777B5A0E5A9C05EB0E759F4394BCDE /* RegularExpressionMatchable.swift */; };
-		B899F3375F0AE04798CE44BA986E03F0 /* AnimatedGradientDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD3B7AF2AC423308705C4D3ADD4AA10 /* AnimatedGradientDirection.swift */; };
-		E8FDABE53417200D67D76AC375788884 /* String+RegularExpressionMatchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B1C83E84D879DC6812D833969EA0ED /* String+RegularExpressionMatchable.swift */; };
+		564877FA7D05AFD19890205A2CEFD41C /* AnimatedGradientViewColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2133124ADE7D51B35EEA83689BC29ED2 /* AnimatedGradientViewColor.swift */; };
+		64A548BFB4631DAE16C0A7962A83C452 /* AnimatedGradientView-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D05ACA3EDA5E3D3EA6EDB2821A20608A /* AnimatedGradientView-dummy.m */; };
+		6C2C583571914F59F98E84C9156D7285 /* AnimatedGradientViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D875E7F37A76AB4F0BD61F7A72EC1BFD /* AnimatedGradientViewAnimation.swift */; };
+		74DCAFF528DD35B4F751A0774EDFF5C4 /* AnimatedGradientView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D253A30454F7E3408680D34292E0D860 /* AnimatedGradientView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AE13D3FA75FDFB448DD60361E8EDD711 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		AED9B7ABCB238660A995AD1DE6991FFD /* RegularExpressionMatchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B316D8096D9B6D696EBEF1063051CF /* RegularExpressionMatchable.swift */; };
+		B899F3375F0AE04798CE44BA986E03F0 /* AnimatedGradientDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F40B985A5ADCE6ACC100A0787141D5 /* AnimatedGradientDirection.swift */; };
+		BF90BFF34BBAD8B2C7A6CE9641145561 /* KeychainAccess-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = ADAC10647CE65CA3E636F18340C77D49 /* KeychainAccess-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E17424CDFFD1279B8DF87ECCBD5BACEB /* Pods-PlaySwap-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C3DA86CB61252133EA709D8D0546B783 /* Pods-PlaySwap-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E8FDABE53417200D67D76AC375788884 /* String+RegularExpressionMatchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C939FF0397243C571D29937437C8A46 /* String+RegularExpressionMatchable.swift */; };
+		EEA3892D8746DA47A2889A0717514533 /* KeychainAccess-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F767DC54350B533F7B4357B7467551B3 /* KeychainAccess-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C8F349B8FF895AC83646BA08BAD5DAAA /* PBXContainerItemProxy */ = {
+		2754548398AFCFBF75EC3125DD2C3A20 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6B7C22957C48BAC70092FB33A0F0893C;
 			remoteInfo = AnimatedGradientView;
 		};
+		CE9107AB64286AD03DBFE71CD245AC7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 615C831BCE925ED486B225B87E44926D;
+			remoteInfo = KeychainAccess;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0757CD1802B424962E2BA964971F8ADF /* Pods-PlaySwap-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlaySwap-acknowledgements.plist"; sourceTree = "<group>"; };
-		0E6ED17ED028EEB21B4908A0DC90231C /* Collection+UniqueMap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Collection+UniqueMap.swift"; path = "AnimatedGradientView/Classes/Extensions/Collection+UniqueMap.swift"; sourceTree = "<group>"; };
-		0E9AA23009CE0151E665B1B764D71E7A /* AnimatedGradientView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AnimatedGradientView-umbrella.h"; sourceTree = "<group>"; };
-		24A61C4F4FC8F767BD2CBBFBA78D480A /* AnimatedGradientView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientView.swift; path = AnimatedGradientView/Classes/AnimatedGradientView.swift; sourceTree = "<group>"; };
-		25B1C83E84D879DC6812D833969EA0ED /* String+RegularExpressionMatchable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+RegularExpressionMatchable.swift"; path = "AnimatedGradientView/Classes/Extensions/String+RegularExpressionMatchable.swift"; sourceTree = "<group>"; };
-		2F3A1F19D2F13AE36C979DD5B7610132 /* AnimatedGradientView-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AnimatedGradientView-Info.plist"; sourceTree = "<group>"; };
+		08731BAC7306BE70EDE49BE576781D45 /* KeychainAccess.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = KeychainAccess.modulemap; sourceTree = "<group>"; };
+		0E0138EFB0D542CE49080B61B06BC7AF /* KeychainAccess-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KeychainAccess-prefix.pch"; sourceTree = "<group>"; };
+		197B4D3402C3D98F93C1A21068E75C34 /* AnimatedGradientView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AnimatedGradientView-prefix.pch"; sourceTree = "<group>"; };
+		1C939FF0397243C571D29937437C8A46 /* String+RegularExpressionMatchable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "String+RegularExpressionMatchable.swift"; path = "AnimatedGradientView/Classes/Extensions/String+RegularExpressionMatchable.swift"; sourceTree = "<group>"; };
+		2133124ADE7D51B35EEA83689BC29ED2 /* AnimatedGradientViewColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientViewColor.swift; path = AnimatedGradientView/Classes/AnimatedGradientViewColor.swift; sourceTree = "<group>"; };
 		316C843CB59247217A697F6A36E5DA87 /* Pods-PlaySwap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlaySwap.debug.xcconfig"; sourceTree = "<group>"; };
+		35FACFF0C794D1FDA07E2DE11506EF7C /* AnimatedGradientView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AnimatedGradientView.modulemap; sourceTree = "<group>"; };
 		3BC2EDC0BB9A89452D408DAFDD74B7B6 /* Pods-PlaySwap-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-PlaySwap-acknowledgements.markdown"; sourceTree = "<group>"; };
-		51777B5A0E5A9C05EB0E759F4394BCDE /* RegularExpressionMatchable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RegularExpressionMatchable.swift; path = AnimatedGradientView/Classes/Extensions/RegularExpressionMatchable.swift; sourceTree = "<group>"; };
-		539AB69E5B6EDFD6A314B2BACB0037BB /* AnimatedGradientView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AnimatedGradientView-dummy.m"; sourceTree = "<group>"; };
+		4A2C74AA4EF4C35A7A1A16EE62507740 /* AnimatedGradientView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientView.swift; path = AnimatedGradientView/Classes/AnimatedGradientView.swift; sourceTree = "<group>"; };
+		5571DC6A7AC983A6CBD29EA8DAF9931E /* Collection+UniqueMap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Collection+UniqueMap.swift"; path = "AnimatedGradientView/Classes/Extensions/Collection+UniqueMap.swift"; sourceTree = "<group>"; };
+		5A0333F918172369DE46DCAC0577F692 /* KeychainAccess.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = KeychainAccess.release.xcconfig; sourceTree = "<group>"; };
+		696041BD25AA6957DEDED8ABDAF9BCA3 /* AnimatedGradientView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AnimatedGradientView.release.xcconfig; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		739222B31BFD5A164726452CA7D1A16B /* AnimatedGradientView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = AnimatedGradientView.modulemap; sourceTree = "<group>"; };
 		786A771A8CF40E0D80B1932D605E7483 /* Pods-PlaySwap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-PlaySwap.release.xcconfig"; sourceTree = "<group>"; };
-		88DBB607C278FE63A65E8D16107165F0 /* AnimatedGradientView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AnimatedGradientView.debug.xcconfig; sourceTree = "<group>"; };
-		9458CF5E8B2672C680769AFAD1961C95 /* AnimatedGradientView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AnimatedGradientView-prefix.pch"; sourceTree = "<group>"; };
-		97541B451B49896EA7171C2A84000335 /* AnimatedGradientViewAnimation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientViewAnimation.swift; path = AnimatedGradientView/Classes/AnimatedGradientViewAnimation.swift; sourceTree = "<group>"; };
+		912D17BA95E9BE264AF2C1348984FF5D /* KeychainAccess.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = KeychainAccess.debug.xcconfig; sourceTree = "<group>"; };
+		949795F90B15CD1F4F1FCC44677AC5F1 /* KeychainAccess-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "KeychainAccess-Info.plist"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9F1FCDE180748408788A3390B532C15F /* Pods-PlaySwap-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-PlaySwap-dummy.m"; sourceTree = "<group>"; };
+		A51969828B077449E6AC1D521D90D41B /* AnimatedGradientView-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AnimatedGradientView-Info.plist"; sourceTree = "<group>"; };
 		AA32408D435DD3D8C621B25799CE2288 /* AnimatedGradientView */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AnimatedGradientView; path = AnimatedGradientView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADAC10647CE65CA3E636F18340C77D49 /* KeychainAccess-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "KeychainAccess-umbrella.h"; sourceTree = "<group>"; };
 		ADC9F238D1A1C7F9034B0A90FFFE89B5 /* Pods-PlaySwap-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-PlaySwap-Info.plist"; sourceTree = "<group>"; };
-		B882520CC07B46144265EBFD2FA3C479 /* AnimatedGradientViewColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientViewColor.swift; path = AnimatedGradientView/Classes/AnimatedGradientViewColor.swift; sourceTree = "<group>"; };
 		C3DA86CB61252133EA709D8D0546B783 /* Pods-PlaySwap-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-PlaySwap-umbrella.h"; sourceTree = "<group>"; };
 		C85F00D5E162FFB5F057B95F1238F85C /* Pods-PlaySwap-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PlaySwap-frameworks.sh"; sourceTree = "<group>"; };
+		C8F40B985A5ADCE6ACC100A0787141D5 /* AnimatedGradientDirection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientDirection.swift; path = AnimatedGradientView/Classes/AnimatedGradientDirection.swift; sourceTree = "<group>"; };
+		D05ACA3EDA5E3D3EA6EDB2821A20608A /* AnimatedGradientView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AnimatedGradientView-dummy.m"; sourceTree = "<group>"; };
 		D09BEEE88178508059A30BB51F1BC6C2 /* Pods-PlaySwap */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-PlaySwap"; path = Pods_PlaySwap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1B316D8096D9B6D696EBEF1063051CF /* RegularExpressionMatchable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RegularExpressionMatchable.swift; path = AnimatedGradientView/Classes/Extensions/RegularExpressionMatchable.swift; sourceTree = "<group>"; };
+		D253A30454F7E3408680D34292E0D860 /* AnimatedGradientView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AnimatedGradientView-umbrella.h"; sourceTree = "<group>"; };
+		D875E7F37A76AB4F0BD61F7A72EC1BFD /* AnimatedGradientViewAnimation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientViewAnimation.swift; path = AnimatedGradientView/Classes/AnimatedGradientViewAnimation.swift; sourceTree = "<group>"; };
 		DA93ECAB808743914D7324D748DA8A1E /* Pods-PlaySwap.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-PlaySwap.modulemap"; sourceTree = "<group>"; };
-		FC5199E6EE8CBDBA9886F55DFA25F714 /* AnimatedGradientView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AnimatedGradientView.release.xcconfig; sourceTree = "<group>"; };
-		FCD3B7AF2AC423308705C4D3ADD4AA10 /* AnimatedGradientDirection.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientDirection.swift; path = AnimatedGradientView/Classes/AnimatedGradientDirection.swift; sourceTree = "<group>"; };
+		DD0458436075DDD3EE71AE891E2395A9 /* AnimatedGradientView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AnimatedGradientView.debug.xcconfig; sourceTree = "<group>"; };
+		E8EE7F078656FABB8F6821D10FF994BB /* KeychainAccess */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = KeychainAccess; path = KeychainAccess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F767DC54350B533F7B4357B7467551B3 /* KeychainAccess-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "KeychainAccess-dummy.m"; sourceTree = "<group>"; };
+		F7C62CF45D015691DA14AB4B7464F4F5 /* Keychain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Keychain.swift; path = Lib/KeychainAccess/Keychain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		065574A58773DE7913D1E64820B71887 /* Frameworks */ = {
+		20ED7E51168371763D10BFE47557A58B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C7C012461E216105952A727909753E5 /* Foundation.framework in Frameworks */,
+				34E7811638053E4348A35CCD7205F0D0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61A2EC0AB6F1423BBB0D97DFA9CC1E1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE13D3FA75FDFB448DD60361E8EDD711 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,36 +110,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1420B3BD91CAD45D547E086C9F7840B6 /* Pods */ = {
+		1773D29AA6DE303DE32EBEC316BDB4C3 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				6DBD8D265E37BD18B4B2D3526F174A2D /* AnimatedGradientView */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		41D7203CE0FCCE58FA52F486F98E3D4A /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				739222B31BFD5A164726452CA7D1A16B /* AnimatedGradientView.modulemap */,
-				539AB69E5B6EDFD6A314B2BACB0037BB /* AnimatedGradientView-dummy.m */,
-				2F3A1F19D2F13AE36C979DD5B7610132 /* AnimatedGradientView-Info.plist */,
-				9458CF5E8B2672C680769AFAD1961C95 /* AnimatedGradientView-prefix.pch */,
-				0E9AA23009CE0151E665B1B764D71E7A /* AnimatedGradientView-umbrella.h */,
-				88DBB607C278FE63A65E8D16107165F0 /* AnimatedGradientView.debug.xcconfig */,
-				FC5199E6EE8CBDBA9886F55DFA25F714 /* AnimatedGradientView.release.xcconfig */,
+				35FACFF0C794D1FDA07E2DE11506EF7C /* AnimatedGradientView.modulemap */,
+				D05ACA3EDA5E3D3EA6EDB2821A20608A /* AnimatedGradientView-dummy.m */,
+				A51969828B077449E6AC1D521D90D41B /* AnimatedGradientView-Info.plist */,
+				197B4D3402C3D98F93C1A21068E75C34 /* AnimatedGradientView-prefix.pch */,
+				D253A30454F7E3408680D34292E0D860 /* AnimatedGradientView-umbrella.h */,
+				DD0458436075DDD3EE71AE891E2395A9 /* AnimatedGradientView.debug.xcconfig */,
+				696041BD25AA6957DEDED8ABDAF9BCA3 /* AnimatedGradientView.release.xcconfig */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/AnimatedGradientView";
 			sourceTree = "<group>";
 		};
-		4DDEA900A59F1C97A2FFB892B6F93168 /* Products */ = {
+		27BEAD39D991DA5032496E08EA228790 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				AA32408D435DD3D8C621B25799CE2288 /* AnimatedGradientView */,
+				E8EE7F078656FABB8F6821D10FF994BB /* KeychainAccess */,
 				D09BEEE88178508059A30BB51F1BC6C2 /* Pods-PlaySwap */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4959E7D7D6DE5C111D67DD2CA28CA942 /* AnimatedGradientView */ = {
+			isa = PBXGroup;
+			children = (
+				C8F40B985A5ADCE6ACC100A0787141D5 /* AnimatedGradientDirection.swift */,
+				4A2C74AA4EF4C35A7A1A16EE62507740 /* AnimatedGradientView.swift */,
+				D875E7F37A76AB4F0BD61F7A72EC1BFD /* AnimatedGradientViewAnimation.swift */,
+				2133124ADE7D51B35EEA83689BC29ED2 /* AnimatedGradientViewColor.swift */,
+				5571DC6A7AC983A6CBD29EA8DAF9931E /* Collection+UniqueMap.swift */,
+				D1B316D8096D9B6D696EBEF1063051CF /* RegularExpressionMatchable.swift */,
+				1C939FF0397243C571D29937437C8A46 /* String+RegularExpressionMatchable.swift */,
+				1773D29AA6DE303DE32EBEC316BDB4C3 /* Support Files */,
+			);
+			name = AnimatedGradientView;
+			path = AnimatedGradientView;
 			sourceTree = "<group>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
@@ -122,20 +159,13 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		6DBD8D265E37BD18B4B2D3526F174A2D /* AnimatedGradientView */ = {
+		9C0E880B299F08E6039F8FD437F44317 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FCD3B7AF2AC423308705C4D3ADD4AA10 /* AnimatedGradientDirection.swift */,
-				24A61C4F4FC8F767BD2CBBFBA78D480A /* AnimatedGradientView.swift */,
-				97541B451B49896EA7171C2A84000335 /* AnimatedGradientViewAnimation.swift */,
-				B882520CC07B46144265EBFD2FA3C479 /* AnimatedGradientViewColor.swift */,
-				0E6ED17ED028EEB21B4908A0DC90231C /* Collection+UniqueMap.swift */,
-				51777B5A0E5A9C05EB0E759F4394BCDE /* RegularExpressionMatchable.swift */,
-				25B1C83E84D879DC6812D833969EA0ED /* String+RegularExpressionMatchable.swift */,
-				41D7203CE0FCCE58FA52F486F98E3D4A /* Support Files */,
+				4959E7D7D6DE5C111D67DD2CA28CA942 /* AnimatedGradientView */,
+				B88FA0896D1D6DF17DBCA345C8A81B84 /* KeychainAccess */,
 			);
-			name = AnimatedGradientView;
-			path = AnimatedGradientView;
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		B24DF4537DE24EC511DB825B526C87FF /* Targets Support Files */ = {
@@ -144,6 +174,16 @@
 				B98C4E855790A038DAF8FC2910713097 /* Pods-PlaySwap */,
 			);
 			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		B88FA0896D1D6DF17DBCA345C8A81B84 /* KeychainAccess */ = {
+			isa = PBXGroup;
+			children = (
+				F7C62CF45D015691DA14AB4B7464F4F5 /* Keychain.swift */,
+				E3CEE3C276051323A77F50796AD04577 /* Support Files */,
+			);
+			name = KeychainAccess;
+			path = KeychainAccess;
 			sourceTree = "<group>";
 		};
 		B98C4E855790A038DAF8FC2910713097 /* Pods-PlaySwap */ = {
@@ -168,8 +208,8 @@
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				1420B3BD91CAD45D547E086C9F7840B6 /* Pods */,
-				4DDEA900A59F1C97A2FFB892B6F93168 /* Products */,
+				9C0E880B299F08E6039F8FD437F44317 /* Pods */,
+				27BEAD39D991DA5032496E08EA228790 /* Products */,
 				B24DF4537DE24EC511DB825B526C87FF /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -182,14 +222,37 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E3CEE3C276051323A77F50796AD04577 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				08731BAC7306BE70EDE49BE576781D45 /* KeychainAccess.modulemap */,
+				F767DC54350B533F7B4357B7467551B3 /* KeychainAccess-dummy.m */,
+				949795F90B15CD1F4F1FCC44677AC5F1 /* KeychainAccess-Info.plist */,
+				0E0138EFB0D542CE49080B61B06BC7AF /* KeychainAccess-prefix.pch */,
+				ADAC10647CE65CA3E636F18340C77D49 /* KeychainAccess-umbrella.h */,
+				912D17BA95E9BE264AF2C1348984FF5D /* KeychainAccess.debug.xcconfig */,
+				5A0333F918172369DE46DCAC0577F692 /* KeychainAccess.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/KeychainAccess";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		0037A25E0A400E54F556D1E5C40ED4F3 /* Headers */ = {
+		02FE759D2C403186DEF0791650467C0F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24EC1B56DEED857BC58563B7BCEA5917 /* Pods-PlaySwap-umbrella.h in Headers */,
+				E17424CDFFD1279B8DF87ECCBD5BACEB /* Pods-PlaySwap-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF75125526618A4F89C7DE0AA396B82A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF90BFF34BBAD8B2C7A6CE9641145561 /* KeychainAccess-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +267,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		615C831BCE925ED486B225B87E44926D /* KeychainAccess */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8186AABF55F555DDAD74F17BA7EC1698 /* Build configuration list for PBXNativeTarget "KeychainAccess" */;
+			buildPhases = (
+				BF75125526618A4F89C7DE0AA396B82A /* Headers */,
+				3CA247B210AE409280F27D97CC981D9D /* Sources */,
+				61A2EC0AB6F1423BBB0D97DFA9CC1E1B /* Frameworks */,
+				57833CBC64D40DF1355638A2FC2ACC60 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KeychainAccess;
+			productName = KeychainAccess;
+			productReference = E8EE7F078656FABB8F6821D10FF994BB /* KeychainAccess */;
+			productType = "com.apple.product-type.framework";
+		};
 		6B7C22957C48BAC70092FB33A0F0893C /* AnimatedGradientView */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E6778D3956E0ED5A00E134A41B4AF5F4 /* Build configuration list for PBXNativeTarget "AnimatedGradientView" */;
@@ -224,17 +305,18 @@
 		};
 		F45B5F655B4780E0DBAE430F6A0CFA7B /* Pods-PlaySwap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B5146EB10C2B9508F20A49142C4ED189 /* Build configuration list for PBXNativeTarget "Pods-PlaySwap" */;
+			buildConfigurationList = 7013C620BADFBC5843A27C832494CDC7 /* Build configuration list for PBXNativeTarget "Pods-PlaySwap" */;
 			buildPhases = (
-				0037A25E0A400E54F556D1E5C40ED4F3 /* Headers */,
-				7E32626122408FA2B98A6D70F60FCC9F /* Sources */,
-				065574A58773DE7913D1E64820B71887 /* Frameworks */,
-				F4B834A2090E641038578842102C5122 /* Resources */,
+				02FE759D2C403186DEF0791650467C0F /* Headers */,
+				03503F8AE8DE6FA7F962C083B73DC971 /* Sources */,
+				20ED7E51168371763D10BFE47557A58B /* Frameworks */,
+				523D0453DC9E8D5BC30D6ED96A75CEDA /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				86EC26751985D6D14CFE5C35D2CE8AAF /* PBXTargetDependency */,
+				B98F3A41C745AC72910049AD59204420 /* PBXTargetDependency */,
+				207F2FA7F82D7B0EF5EA1261D2CE28C7 /* PBXTargetDependency */,
 			);
 			name = "Pods-PlaySwap";
 			productName = Pods_PlaySwap;
@@ -259,25 +341,33 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 4DDEA900A59F1C97A2FFB892B6F93168 /* Products */;
+			productRefGroup = 27BEAD39D991DA5032496E08EA228790 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				6B7C22957C48BAC70092FB33A0F0893C /* AnimatedGradientView */,
+				615C831BCE925ED486B225B87E44926D /* KeychainAccess */,
 				F45B5F655B4780E0DBAE430F6A0CFA7B /* Pods-PlaySwap */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CBDD6F6CFF0C1114C8C860D4B99C636B /* Resources */ = {
+		523D0453DC9E8D5BC30D6ED96A75CEDA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F4B834A2090E641038578842102C5122 /* Resources */ = {
+		57833CBC64D40DF1355638A2FC2ACC60 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBDD6F6CFF0C1114C8C860D4B99C636B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -287,11 +377,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		7E32626122408FA2B98A6D70F60FCC9F /* Sources */ = {
+		03503F8AE8DE6FA7F962C083B73DC971 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0FDE9E9584ED0520FF5A2736C8FE2363 /* Pods-PlaySwap-dummy.m in Sources */,
+				3B31AEBB59C015805446CA7707BA0998 /* Pods-PlaySwap-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CA247B210AE409280F27D97CC981D9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C9022F02292EA5FB21AB5FFC27D05F8 /* Keychain.swift in Sources */,
+				EEA3892D8746DA47A2889A0717514533 /* KeychainAccess-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,18 +412,59 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		86EC26751985D6D14CFE5C35D2CE8AAF /* PBXTargetDependency */ = {
+		207F2FA7F82D7B0EF5EA1261D2CE28C7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = KeychainAccess;
+			target = 615C831BCE925ED486B225B87E44926D /* KeychainAccess */;
+			targetProxy = CE9107AB64286AD03DBFE71CD245AC7D /* PBXContainerItemProxy */;
+		};
+		B98F3A41C745AC72910049AD59204420 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AnimatedGradientView;
 			target = 6B7C22957C48BAC70092FB33A0F0893C /* AnimatedGradientView */;
-			targetProxy = C8F349B8FF895AC83646BA08BAD5DAAA /* PBXContainerItemProxy */;
+			targetProxy = 2754548398AFCFBF75EC3125DD2C3A20 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0B0425AC794F7F2D9B103BDF08D1C15F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A0333F918172369DE46DCAC0577F692 /* KeychainAccess.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/KeychainAccess/KeychainAccess-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
+				PRODUCT_MODULE_NAME = KeychainAccess;
+				PRODUCT_NAME = KeychainAccess;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		39CD9BE4630AB0E66DD9AE68578A75B2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC5199E6EE8CBDBA9886F55DFA25F714 /* AnimatedGradientView.release.xcconfig */;
+			baseConfigurationReference = 696041BD25AA6957DEDED8ABDAF9BCA3 /* AnimatedGradientView.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -357,45 +497,7 @@
 			};
 			name = Release;
 		};
-		819AF4B715F57D7F8A98DD21A606F4AC /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 786A771A8CF40E0D80B1932D605E7483 /* Pods-PlaySwap.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8C3C17A77E22CD68383AAEC9F2073429 /* Debug */ = {
+		8E20888A94928A4560F2F941CFE9BD0C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 316C843CB59247217A697F6A36E5DA87 /* Pods-PlaySwap.debug.xcconfig */;
 			buildSettings = {
@@ -426,6 +528,40 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		8E39B57F09E269952EB752B872860D2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 912D17BA95E9BE264AF2C1348984FF5D /* KeychainAccess.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/KeychainAccess/KeychainAccess-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/KeychainAccess/KeychainAccess-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/KeychainAccess/KeychainAccess.modulemap";
+				PRODUCT_MODULE_NAME = KeychainAccess;
+				PRODUCT_NAME = KeychainAccess;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -560,9 +696,47 @@
 			};
 			name = Release;
 		};
+		B2F466B83425D40EC5C69F6F5BBE74D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 786A771A8CF40E0D80B1932D605E7483 /* Pods-PlaySwap.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		BACB28FF52CDF6FF977A91930F60B63D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 88DBB607C278FE63A65E8D16107165F0 /* AnimatedGradientView.debug.xcconfig */;
+			baseConfigurationReference = DD0458436075DDD3EE71AE891E2395A9 /* AnimatedGradientView.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -606,11 +780,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B5146EB10C2B9508F20A49142C4ED189 /* Build configuration list for PBXNativeTarget "Pods-PlaySwap" */ = {
+		7013C620BADFBC5843A27C832494CDC7 /* Build configuration list for PBXNativeTarget "Pods-PlaySwap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8C3C17A77E22CD68383AAEC9F2073429 /* Debug */,
-				819AF4B715F57D7F8A98DD21A606F4AC /* Release */,
+				8E20888A94928A4560F2F941CFE9BD0C /* Debug */,
+				B2F466B83425D40EC5C69F6F5BBE74D6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8186AABF55F555DDAD74F17BA7EC1698 /* Build configuration list for PBXNativeTarget "KeychainAccess" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8E39B57F09E269952EB752B872860D2C /* Debug */,
+				0B0425AC794F7F2D9B103BDF08D1C15F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
