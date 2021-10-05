@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1756F18E270BC63C00529C0D /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 1756F18D270BC63C00529C0D /* SpotifyAPI */; };
 		17A2FBC2270BA2BD00EBB392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */; };
 		17A2FBC4270BA2BD00EBB392 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */; };
 		17A2FBC6270BA2BD00EBB392 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC5270BA2BD00EBB392 /* ViewController.swift */; };
@@ -37,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1756F18E270BC63C00529C0D /* SpotifyAPI in Frameworks */,
 				DD59230198B507BDB20F7602 /* Pods_PlaySwap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -44,6 +46,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1756EE5C270BBE8700529C0D /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				17A2FBC5270BA2BD00EBB392 /* ViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
 		17A2FBB5270BA2BD00EBB392 = {
 			isa = PBXGroup;
 			children = (
@@ -66,9 +76,9 @@
 		17A2FBC0270BA2BD00EBB392 /* PlaySwap */ = {
 			isa = PBXGroup;
 			children = (
+				1756EE5C270BBE8700529C0D /* ViewControllers */,
 				17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */,
 				17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */,
-				17A2FBC5270BA2BD00EBB392 /* ViewController.swift */,
 				17A2FBC7270BA2BD00EBB392 /* Main.storyboard */,
 				17A2FBCA270BA2BF00EBB392 /* Assets.xcassets */,
 				17A2FBCC270BA2BF00EBB392 /* LaunchScreen.storyboard */,
@@ -91,7 +101,6 @@
 				71D249A4AB4466BC0704AD1D /* Pods-PlaySwap.debug.xcconfig */,
 				C7C2D12D98C7B7938B84FAC5 /* Pods-PlaySwap.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -121,6 +130,9 @@
 			dependencies = (
 			);
 			name = PlaySwap;
+			packageProductDependencies = (
+				1756F18D270BC63C00529C0D /* SpotifyAPI */,
+			);
 			productName = PlaySwap;
 			productReference = 17A2FBBE270BA2BD00EBB392 /* PlaySwap.app */;
 			productType = "com.apple.product-type.application";
@@ -149,6 +161,9 @@
 				Base,
 			);
 			mainGroup = 17A2FBB5270BA2BD00EBB392;
+			packageReferences = (
+				1756F18C270BC63C00529C0D /* XCRemoteSwiftPackageReference "SpotifyAPI" */,
+			);
 			productRefGroup = 17A2FBBF270BA2BD00EBB392 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -443,6 +458,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1756F18C270BC63C00529C0D /* XCRemoteSwiftPackageReference "SpotifyAPI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Peter-Schorn/SpotifyAPI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1756F18D270BC63C00529C0D /* SpotifyAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1756F18C270BC63C00529C0D /* XCRemoteSwiftPackageReference "SpotifyAPI" */;
+			productName = SpotifyAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 17A2FBB6270BA2BD00EBB392 /* Project object */;
 }
