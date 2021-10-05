@@ -92,7 +92,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     func loadSpotifyLogin() {
         DispatchQueue.main.async {
             let authorizationURL = self.spotify.authorizationManager.makeAuthorizationURL(
-                redirectURI: URL(string: "https://google.com")!,
+                redirectURI: URL(string: "https://www.google.com")!,
                 showDialog: false,
                 scopes: [
                     .playlistModifyPrivate,
@@ -110,7 +110,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
 //        if(
-        if ((webView.url?.absoluteString as! String).contains("google")) {
+        if ((webView.url?.absoluteString as! String).contains("google") && (webView.url?.absoluteString as! String).contains("accounts.spotify") == false) {
             print("* spotify redirect detected")
             webView.isHidden = true
             webView.alpha = 0
@@ -127,7 +127,21 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         }
                         else {
                             print("couldn't authorize application: \(error)")
-                            self.loadSpotifyLogin()
+                            let dataStore = WKWebsiteDataStore.default()
+                            DispatchQueue.main.async {
+                                dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { (records) in
+                                    for record in records {
+                                        if record.displayName.contains("spotify") {
+                                            dataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), for: [record], completionHandler: {
+    //                                            print("Deleted: " + record.displayName);
+                                            })
+                                        }
+                                    }
+                                    self.loadSpotifyLogin()
+                                }
+                            }
+                            
+                            
                         }
                 }
             })
@@ -139,6 +153,8 @@ class ViewController: UIViewController, WKNavigationDelegate {
         print("* webview loaded from url: \(webView.url?.absoluteString as! String)")
         if((webView.url?.absoluteString as! String).contains("spotify")) {
 //            webView.fadeIn()
+            webView.alpha = 1
+            webView.isHidden = false
         } else if ((webView.url?.absoluteString as! String).contains("google")) {
             print("* spotify redirect detected")
             webView.isHidden = true
