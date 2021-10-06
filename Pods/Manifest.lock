@@ -1,20 +1,24 @@
 PODS:
   - AnimatedGradientView (3.1.0)
   - KeychainAccess (4.2.2)
+  - RAGTextField (0.14.0)
 
 DEPENDENCIES:
   - AnimatedGradientView
   - KeychainAccess
+  - RAGTextField
 
 SPEC REPOS:
   trunk:
     - AnimatedGradientView
     - KeychainAccess
+    - RAGTextField
 
 SPEC CHECKSUMS:
   AnimatedGradientView: f249740238c6b491a10d505ab06bb98d897ca3a7
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  RAGTextField: ebeab17ae88ce880a85601af33edc2879fa53813
 
-PODFILE CHECKSUM: 202bcf07845f80117d2ac47e662ee5d1a74c4e99
+PODFILE CHECKSUM: 45ad1cee7df4d18d144d02a18a62abc0c1cc84ec
 
 COCOAPODS: 1.11.2

@@ -8,4 +8,5 @@ target 'PlaySwap' do
   # Pods for PlaySwap
   pod "AnimatedGradientView"
   pod 'KeychainAccess'
+  pod "RAGTextField"
 end

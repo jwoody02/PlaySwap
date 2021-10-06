@@ -10,17 +10,28 @@ import AnimatedGradientView
 import Combine
 import SpotifyWebAPI
 import WebKit
+import AVKit
+import AVFoundation
 
 class ViewController: UIViewController, WKNavigationDelegate {
-    var iTunesImage = UIImageView()
+    
     var emailField = UITextField()
     var passwordField = UITextField()
     var webView = WKWebView()
     var loginButton = UIButton()
     var searchResultsTableView = UITableView()
+    
+    //LOGIN PAGE PART 1
+    var chooseService = UILabel()
+    var continueButton = UIButton()
+    var iTunesImage = UIImageView()
+    var spotifyImage = UIImageView()
+    
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
         clientId: "", clientSecret: ""
     ))
+    var playerLayer = AVPlayerLayer()
+    var songQueue: [SpotifyURIConvertible] = []
     private var cancellables: Set<AnyCancellable> = []
     var transferType = "spotify" //spotify or itunes
     override func viewDidLoad() {
@@ -39,7 +50,89 @@ class ViewController: UIViewController, WKNavigationDelegate {
 //        gradient.startAnimating()
 //        view.addSubview(gradient)
         
-        self.view.backgroundColor = .black
+        self.view.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+        
+        //Looks for single or multiple taps.
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
+//        searchResultsTableView.frame = CG
+        //SPOTIFY SHIT (gets environment variables)
+        spotify = SpotifyAPI(
+            authorizationManager: AuthorizationCodeFlowManager(
+                clientId: UIApplication.clientId ?? "", clientSecret: UIApplication.clientSecret ?? ""
+            )
+        )
+        //JUST MAKING WEBVIEW VISIBLE
+        webView.navigationDelegate = self
+        view.addSubview(webView)
+        webView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        playVideo(from: "Mobile_Web_BG.m4v")
+        
+        //ACTUALLY LOAD AUTHENTICATION URL & LOAD INTO APP
+//        loadSpotifyLogin()
+        
+        
+    }
+    private func playVideo(from file:String) {
+        let file = file.components(separatedBy: ".")
+
+        guard let path = Bundle.main.path(forResource: file[0], ofType:file[1]) else {
+            debugPrint( "\(file.joined(separator: ".")) not found")
+            return
+        }
+        let player = AVPlayer(url: URL(fileURLWithPath: path))
+
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = self.view.bounds
+        playerLayer.videoGravity = .resizeAspectFill
+//        playerLayer.repeatCount = .infinity
+        player.volume = 0
+        self.view.layer.addSublayer(playerLayer)
+        loopVideo(videoPlayer: player)
+//        view.layer.sendSubviewToBack(playerLayer.)
+        player.play()
+        addLoginPage1Elements()
+    }
+    func addLoginPage1Elements() {
+        
+        //CoNTINUE BUTTON AT BOTTOM
+        continueButton = createButton()
+        continueButton.setTitle("continue", for: .normal)
+        continueButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+        continueButton.layer.borderColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
+        continueButton.layer.borderWidth = 1
+        continueButton.alpha = 1
+        continueButton.layer.cornerRadius = 5
+        continueButton.frame = CGRect(x: 50, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width - 100, height: 50)
+        continueButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+        continueButton.addTarget(self, action: #selector(logginPressed(_:)), for: .touchUpInside)
+        continueButton.setTitleColor(hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+        continueButton.dropShadow()
+        
+        //ITUNES AND SPOTIFY IMAGES
+        iTunesImage = createImage(named: "itunes.png")
+        iTunesImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 - 75,y: 200,width: 64, height: 64)
+        spotifyImage = createImage(named: "spotify.png")
+        spotifyImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 + 75,y: 200,width: 64, height: 64)
+        iTunesImage.contentMode = .scaleAspectFill
+        
+//        UILABEL ABOVE IMAGES
+        chooseService = createLabel()
+        chooseService.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+        chooseService.text = "CHOOSE SERVICE YOU WANT TO TRANSFER TO".lowercased()
+        chooseService.frame = CGRect(x: 40, y: 100, width: UIScreen.main.bounds.width-80, height: 64)
+        chooseService.textAlignment = .center
+        
+    }
+    func hideLoginpage1Elements() {
+        continueButton.fadeOut()
+        iTunesImage.fadeOut()
+        spotifyImage.fadeOut()
+        chooseService.fadeOut()
+        stopVideo()
+    }
+    func addLoginpage2Elements() {
         
         
         emailField = createTextField()
@@ -68,27 +161,37 @@ class ViewController: UIViewController, WKNavigationDelegate {
         loginButton.layer.cornerRadius = 5
         loginButton.frame = CGRect(x: 50, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width - 100, height: 50)
         loginButton.addTarget(self, action: #selector(logginPressed(_:)), for: .touchUpInside)
-        //Looks for single or multiple taps.
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
-        
-//        searchResultsTableView.frame = CG
-        //SPOTIFY SHIT (gets environment variables)
-        spotify = SpotifyAPI(
-            authorizationManager: AuthorizationCodeFlowManager(
-                clientId: UIApplication.clientId ?? "", clientSecret: UIApplication.clientSecret ?? ""
-            )
-        )
-        //JUST MAKING WEBVIEW VISIBLE
-        webView.navigationDelegate = self
-        view.addSubview(webView)
-        webView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        
-        //ACTUALLY LOAD AUTHENTICATION URL & LOAD INTO APP
-        loadSpotifyLogin()
-        
     }
-    
+    func hexStringToUIColor (hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
+    func loopVideo(videoPlayer: AVPlayer) {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil, queue: nil) { notification in
+            videoPlayer.seek(to: CMTime.zero)
+            videoPlayer.play()
+        }
+    }
+    func stopVideo() {
+        playerLayer.player?.pause()
+    }
     func loadSpotifyLogin() {
         DispatchQueue.main.async {
             //USE API TO GET AN AUTHORIZATION URL FOR US USING SCOPES
@@ -109,6 +212,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
             
             //MAKE SURE AUTHENTICATION URL IS VALID
             if(authorizationURL.absoluteString.contains("spotify")) {
+                self.hideLoginpage1Elements()
                 self.webView.load(URLRequest(url: authorizationURL))
             }
         }
@@ -143,7 +247,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         print("******************************************************")
 //                        print(bestResult)
 //                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
-                        self.getPlayListItemsFrom(uri: uri)
+                        self.getPlayListItemsFrom(uri: uri, offset: 0)
                         
                     } else if (type == .track) {
                         let bestResult = results.tracks!.items[0]
@@ -161,8 +265,29 @@ class ViewController: UIViewController, WKNavigationDelegate {
             .store(in: &self.cancellables)
 //        return returnVal
     }
-    func getPlayListItemsFrom(uri: String) {
-        self.spotify.playlistItems(uri as! SpotifyURIConvertible).sink(
+    func addSongToQueue(query: String) {
+        //For query do {Song name} SPACE {artist}
+//        songQueue
+        self.spotify.search(query: query, categories: [.track])
+            .sink(
+                receiveCompletion: { completion in
+//                    return completion
+                    print("completion result: \(completion)")
+                    if case .failure(let error) = completion {
+                                        print("COULD NOT SEARCH PROPERLY")
+                                    }
+                },
+                receiveValue: { results in
+//                    print(results.tracks?.items[0])
+                    //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
+                    let bestResult = results.tracks!.items[0]
+                    //ADD SONG TO SONG QUEUE TO BE USED TO SAVE TO PLAYLIST
+                    self.songQueue.append((bestResult.uri as! String) as! SpotifyURIConvertible)
+                }
+            ).store(in: &self.cancellables)
+    }
+    func getPlayListItemsFrom(uri: String, offset: Int?) {
+        self.spotify.playlistItems(uri as! SpotifyURIConvertible, limit: 100, offset: offset ?? 0).sink(
             receiveCompletion: { completion in
 //                    return completion
                 print("completion result: \(completion)")
@@ -179,8 +304,13 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     //ADD EVERYSONG INTO AN ARRAY
                     songArr.append((results.items[n].item?.uri as! String) as! SpotifyURIConvertible)
                 }
+//                print(results)
 //                results.items
                 print("* total amount of songs loaded in playlist: \(songArr.count)")
+//                self.addSongsToPlaylist(playlist: uri as! SpotifyURIConvertible, uris: songArr)
+//                if(results.next != nil) {
+//                    self.getPlayListItemsFrom(uri: uri, offset: (offset ?? 0)+50)
+//                }
 //                print(songArr)
                 //EXAMPLE TO ADD MULTIPLE SONGS TO PLAYLIST
 //                self.addSongsToPlaylist(playlist: "spotify:playlist:78aV5gMM133PC1AOFhqe2v", uris: songArr)
@@ -484,7 +614,7 @@ extension UIView {
 
     func fadeOut(_ duration: TimeInterval = 0.5, delay: TimeInterval = 1.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
         UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
-            self.alpha = 0.3
+            self.alpha = 0.0
     }, completion: completion)
    }
 }
@@ -495,4 +625,55 @@ extension UIApplication {
     static var clientSecret: String? {
         return Bundle.main.object(forInfoDictionaryKey: "CLIENT_SECRET") as? String
     }
+}
+extension UIView {
+    func hexStringToUIColor (hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
+  // OUTPUT 1
+  func dropShadow(scale: Bool = true) {
+    layer.masksToBounds = false
+    layer.shadowColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
+    layer.shadowOpacity = 0.3
+      layer.cornerRadius = 5
+//      layer.masksToBounds = true
+      
+    layer.shadowOffset = CGSize(width: 0, height: 4)
+    layer.shadowRadius = 2
+
+    layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+    layer.shouldRasterize = true
+      layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+  }
+
+  // OUTPUT 2
+  func dropShadow(color: UIColor, opacity: Float = 0.5, offSet: CGSize, radius: CGFloat = 1, scale: Bool = true) {
+    layer.masksToBounds = false
+    layer.shadowColor = color.cgColor
+    layer.shadowOpacity = opacity
+    layer.shadowOffset = offSet
+    layer.shadowRadius = radius
+
+    layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath
+    layer.shouldRasterize = true
+    layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+  }
 }

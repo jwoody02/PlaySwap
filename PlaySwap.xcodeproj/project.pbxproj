@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		173317BB270BEB88007523D7 /* Spotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173317BA270BEB88007523D7 /* Spotify.swift */; };
 		1756F18E270BC63C00529C0D /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 1756F18D270BC63C00529C0D /* SpotifyAPI */; };
+		177D74CB270E3C8E00A21652 /* Mobile_Web_BG.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 177D74CA270E3B0A00A21652 /* Mobile_Web_BG.m4v */; };
+		177D74CE270E63DE00A21652 /* Hypermarket W00 Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 177D74CD270E63DE00A21652 /* Hypermarket W00 Regular.ttf */; };
+		177D74D0270E679500A21652 /* spotify.png in Resources */ = {isa = PBXBuildFile; fileRef = 177D74CF270E679500A21652 /* spotify.png */; };
 		17A2FBC2270BA2BD00EBB392 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */; };
 		17A2FBC4270BA2BD00EBB392 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */; };
 		17A2FBC6270BA2BD00EBB392 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A2FBC5270BA2BD00EBB392 /* ViewController.swift */; };
@@ -21,6 +24,9 @@
 
 /* Begin PBXFileReference section */
 		173317BA270BEB88007523D7 /* Spotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spotify.swift; sourceTree = "<group>"; };
+		177D74CA270E3B0A00A21652 /* Mobile_Web_BG.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mobile_Web_BG.m4v; sourceTree = "<group>"; };
+		177D74CD270E63DE00A21652 /* Hypermarket W00 Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hypermarket W00 Regular.ttf"; sourceTree = "<group>"; };
+		177D74CF270E679500A21652 /* spotify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spotify.png; sourceTree = "<group>"; };
 		17A2FBBE270BA2BD00EBB392 /* PlaySwap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlaySwap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -64,9 +70,27 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		177D74C9270E3AEA00A21652 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */,
+				17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		177D74CC270E63D400A21652 /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				177D74CD270E63DE00A21652 /* Hypermarket W00 Regular.ttf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
 		17A2FBB5270BA2BD00EBB392 = {
 			isa = PBXGroup;
 			children = (
+				177D74CC270E63D400A21652 /* fonts */,
 				17A2FBD5270BA5E800EBB392 /* Resources */,
 				17A2FBC0270BA2BD00EBB392 /* PlaySwap */,
 				17A2FBBF270BA2BD00EBB392 /* Products */,
@@ -86,10 +110,9 @@
 		17A2FBC0270BA2BD00EBB392 /* PlaySwap */ = {
 			isa = PBXGroup;
 			children = (
+				177D74C9270E3AEA00A21652 /* UI */,
 				173317B9270BEB7E007523D7 /* Extensions */,
 				1756EE5C270BBE8700529C0D /* ViewControllers */,
-				17A2FBC1270BA2BD00EBB392 /* AppDelegate.swift */,
-				17A2FBC3270BA2BD00EBB392 /* SceneDelegate.swift */,
 				17A2FBC7270BA2BD00EBB392 /* Main.storyboard */,
 				17A2FBCA270BA2BF00EBB392 /* Assets.xcassets */,
 				17A2FBCC270BA2BF00EBB392 /* LaunchScreen.storyboard */,
@@ -101,7 +124,9 @@
 		17A2FBD5270BA5E800EBB392 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				177D74CA270E3B0A00A21652 /* Mobile_Web_BG.m4v */,
 				17A2FBD6270BA5F200EBB392 /* itunes.png */,
+				177D74CF270E679500A21652 /* spotify.png */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -189,9 +214,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				177D74CB270E3C8E00A21652 /* Mobile_Web_BG.m4v in Resources */,
 				17A2FBCE270BA2BF00EBB392 /* LaunchScreen.storyboard in Resources */,
 				17A2FBD7270BA5F200EBB392 /* itunes.png in Resources */,
 				17A2FBCB270BA2BF00EBB392 /* Assets.xcassets in Resources */,
+				177D74CE270E63DE00A21652 /* Hypermarket W00 Regular.ttf in Resources */,
+				177D74D0270E679500A21652 /* spotify.png in Resources */,
 				17A2FBC9270BA2BD00EBB392 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
