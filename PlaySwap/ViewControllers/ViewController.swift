@@ -12,6 +12,7 @@ import SpotifyWebAPI
 import WebKit
 import AVKit
 import AVFoundation
+import NewYorkAlert
 
 class ViewController: UIViewController, WKNavigationDelegate {
     
@@ -26,14 +27,22 @@ class ViewController: UIViewController, WKNavigationDelegate {
     var continueButton = UIButton()
     var iTunesImage = UIImageView()
     var spotifyImage = UIImageView()
+    var iTunesButton = UIButton()
+    var spotifyButton = UIButton()
+    
+    var backButton = UIButton()
     
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
         clientId: "", clientSecret: ""
     ))
     var playerLayer = AVPlayerLayer()
+    
+    var transferringFrom = ""
+    
     var songQueue: [SpotifyURIConvertible] = []
     private var cancellables: Set<AnyCancellable> = []
     var transferType = "spotify" //spotify or itunes
+    var currentStep = "choose_service"
     override func viewDidLoad() {
         super.viewDidLoad()
         //Here I just make a massive fucking itunes png in the middle of the screen
@@ -50,7 +59,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
 //        gradient.startAnimating()
 //        view.addSubview(gradient)
         
-        self.view.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+//        self.view.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
         
         //Looks for single or multiple taps.
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -98,15 +107,17 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         //CoNTINUE BUTTON AT BOTTOM
         continueButton = createButton()
+        continueButton.alpha = 0
         continueButton.setTitle("continue", for: .normal)
         continueButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
         continueButton.layer.borderColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
         continueButton.layer.borderWidth = 1
-        continueButton.alpha = 1
+//        continueButton.alpha = 1
         continueButton.layer.cornerRadius = 5
         continueButton.frame = CGRect(x: 50, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width - 100, height: 50)
+        continueButton.fadeIn()
         continueButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
-        continueButton.addTarget(self, action: #selector(logginPressed(_:)), for: .touchUpInside)
+        continueButton.addTarget(self, action: #selector(continuePressed(_:)), for: .touchUpInside)
         continueButton.setTitleColor(hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
         continueButton.dropShadow()
         
@@ -114,53 +125,144 @@ class ViewController: UIViewController, WKNavigationDelegate {
         iTunesImage = createImage(named: "itunes.png")
         iTunesImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 - 75,y: 200,width: 64, height: 64)
         spotifyImage = createImage(named: "spotify.png")
+        spotifyImage.alpha = 0
+        spotifyImage.fadeIn()
         spotifyImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 + 75,y: 200,width: 64, height: 64)
         iTunesImage.contentMode = .scaleAspectFill
         
+        //THESE ARE BUTTONS THAT JUST LAY ON TOP OF THE IMAGES SO WE CAN DETECT PRESSES
+        iTunesButton = createButton()
+        iTunesButton.setTitle("", for: .normal)
+        iTunesButton.frame = iTunesImage.frame
+        spotifyButton = createButton()
+        spotifyButton.setTitle("", for: .normal)
+        spotifyButton.frame = spotifyImage.frame
+        iTunesButton.addTarget(self, action: #selector(iTunesPressed(_:)), for: .touchUpInside)
+        spotifyButton.addTarget(self, action: #selector(spotifyPressed(_:)), for: .touchUpInside)
+        
+        
 //        UILABEL ABOVE IMAGES
         chooseService = createLabel()
+        chooseService.alpha = 0
+        
         chooseService.font = UIFont(name: "HypermarketW00-Regular", size: 16)
-        chooseService.text = "CHOOSE SERVICE YOU WANT TO TRANSFER TO".lowercased()
+        chooseService.text = "CHOOSE THE SERVICE YOU WANT TO TRANSFER TO".lowercased()
         chooseService.frame = CGRect(x: 40, y: 100, width: UIScreen.main.bounds.width-80, height: 64)
         chooseService.textAlignment = .center
-        
+        chooseService.textColor = .black
+        chooseService.fadeIn()
+    }
+    func hidePage2Elements() {
+        emailField.fadeOut()
+        passwordField.fadeOut()
+        loginButton.fadeOut()
     }
     func hideLoginpage1Elements() {
-        continueButton.fadeOut()
-        iTunesImage.fadeOut()
-        spotifyImage.fadeOut()
-        chooseService.fadeOut()
-        stopVideo()
+        DispatchQueue.main.async {
+            self.continueButton.fadeOut()
+            self.chooseService.fadeOut()
+                }
+        if(transferringFrom == "itunes") {
+            DispatchQueue.main.async {
+                self.spotifyImage.fadeOut()
+                
+                //ALL ANIMATION STUFF TO MOVE ITUNES ICON AROUND
+                self.backButton = self.createButton()
+                self.backButton.alpha = 0
+                self.backButton.setTitle("⇽ back", for: .normal)
+                self.backButton.frame = CGRect(x: 0, y: 40, width: 100, height: 40)
+                self.backButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 18)
+                self.backButton.addTarget(self, action: #selector(self.backPressed(_:)), for: .touchUpInside)
+                self.backButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+                
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY, width: 64, height: 64)
+                    self.iTunesImage.layer.borderWidth = 0
+                }) { _ in
+//                    viewToAnimate.removeFromSuperview()
+                    UIView.animate(withDuration: 0.5) {
+                        self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY - 120, width: 64, height: 64)
+                        self.backButton.fadeIn()
+                        self.addLoginpage2Elements()
+                    }
+                    
+//                    self.emailField.fadeIn()
+//                    self.passwordField.fadeIn()
+                    
+                }
+                
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.iTunesImage.fadeOut()
+                self.spotifyImage.fadeOut()
+                self.backButton = self.createButton()
+                self.backButton.alpha = 0
+                self.backButton.setTitle("⇽ back", for: .normal)
+                self.backButton.frame = CGRect(x: 0, y: 40, width: 100, height: 40)
+                self.backButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 18)
+                self.backButton.addTarget(self, action: #selector(self.backPressed(_:)), for: .touchUpInside)
+                self.backButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+                self.backButton.fadeIn()
+//                self.backButton.setTitleColor(.black, for: .normal)
+                self.loadSpotifyLogin()
+            }
+        }
+        let seconds = 0.3
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            // Put your code which should be executed with a delay here
+            DispatchQueue.main.async {
+                self.playerLayer.player!.pause()
+                self.playerLayer.removeFromSuperlayer()
+            }
+        }
+        
     }
+    override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            DispatchQueue.main.async {
+//                self.playerLayer.player?.currentItem?.removeObserver(self, forKeyPath: NSNotification.Name.AVPlayerItemDidPlayToEndTime.rawValue, context: nil)
+                self.playerLayer.player!.pause()
+                self.playerLayer.removeFromSuperlayer()
+            }
+        }
     func addLoginpage2Elements() {
         
         
         emailField = createTextField()
+        emailField.alpha = 0
         styleTextField(field: emailField)
         emailField.frame = CGRect(x: 50, y: 200, width: UIScreen.main.bounds.width - 100, height: 50)
-        emailField.placeholder = "Email"
-        emailField.attributedPlaceholder = NSAttributedString(string: "Email",
+        emailField.placeholder = "email"
+        emailField.attributedPlaceholder = NSAttributedString(string: "email",
                                                               attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.3)])
         emailField.keyboardType = .emailAddress
+        emailField.fadeIn()
         
         passwordField = createTextField()
+        passwordField.alpha = 0
         styleTextField(field: passwordField)
         passwordField.frame = CGRect(x: 50, y: 280, width: UIScreen.main.bounds.width - 100, height: 50)
-        passwordField.placeholder = "Email"
-        passwordField.attributedPlaceholder = NSAttributedString(string: "Password",
+        passwordField.placeholder = "password"
+        passwordField.attributedPlaceholder = NSAttributedString(string: "password",
                                                               attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.3)])
         passwordField.isSecureTextEntry = true
+        passwordField.fadeIn()
         
         loginButton = createButton()
-        loginButton.backgroundColor = .white
-        loginButton.setTitle("Login", for: .normal)
-        loginButton.backgroundColor = UIColor.white.withAlphaComponent(0.5)
-        loginButton.layer.borderColor = UIColor.white.withAlphaComponent(0.8).cgColor
+        loginButton.alpha = 0
+        loginButton.setTitle("login", for: .normal)
+        loginButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+        loginButton.layer.borderColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
         loginButton.layer.borderWidth = 1
-        loginButton.alpha = 1
+//        continueButton.alpha = 1
         loginButton.layer.cornerRadius = 5
         loginButton.frame = CGRect(x: 50, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width - 100, height: 50)
-        loginButton.addTarget(self, action: #selector(logginPressed(_:)), for: .touchUpInside)
+        loginButton.fadeIn()
+        loginButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+        loginButton.addTarget(self, action: #selector(loginPressed(_:)), for: .touchUpInside)
+        loginButton.setTitleColor(hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+        loginButton.dropShadow()
     }
     func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
@@ -193,6 +295,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
         playerLayer.player?.pause()
     }
     func loadSpotifyLogin() {
+        print("* LOADING SPOTIFY LOGIN")
         DispatchQueue.main.async {
             //USE API TO GET AN AUTHORIZATION URL FOR US USING SCOPES
             let authorizationURL = self.spotify.authorizationManager.makeAuthorizationURL(
@@ -209,10 +312,10 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         
                 ]
             )!
-            
+            print("* GOT AUTHORIZATION URL: \(authorizationURL)")
             //MAKE SURE AUTHENTICATION URL IS VALID
             if(authorizationURL.absoluteString.contains("spotify")) {
-                self.hideLoginpage1Elements()
+//                self.hideLoginpage1Elements()
                 self.webView.load(URLRequest(url: authorizationURL))
             }
         }
@@ -384,6 +487,9 @@ class ViewController: UIViewController, WKNavigationDelegate {
         )
         .store(in: &self.cancellables)
     }
+    func showSearchPart1() {
+        //LOGAN HERE YOU CAN PUT YOUR UI
+    }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         //WEBVIEW HAS STARTED LOADING GOOGLE.COM USE THIS TO GET AUTH CODE
         if ((webView.url?.absoluteString as! String).contains("google") && (webView.url?.absoluteString as! String).contains("accounts.spotify") == false) {
@@ -397,11 +503,13 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 switch completion {
                     case .finished:
                         print("successfully authorized")
+//                        now we want to show search bar and shit
                     //TESTING PLAYLIST CREATION
-                    self.createPlaylist(name: "test playlist", isPublic: true, isCollaborative: false, description: "test playlist -- ignore")
+//                    self.createPlaylist(name: "test playlist", isPublic: true, isCollaborative: false, description: "test playlist -- ignore")
                     //EXAMPLE SEARCH FUNCTION
 //                    self.searchForSong(query: "shoota playboi carti", type: .track)
-                    self.searchForSong(query: "bb shit", type: .playlist)
+//                    self.searchForSong(query: "bb shit", type: .playlist)
+                    self.showSearchPart1()
                     case .failure(let error):
                         if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
                             print("The user denied the authorization request")
@@ -517,6 +625,74 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         return String(utf8String: rawValue)
     }
+    @objc func continuePressed(_ sender: UIButton) {
+        print("continue button pressed")
+        if(transferringFrom != "") {
+            hideLoginpage1Elements()
+        } else {
+            //USER NEEDS TO SELECT ITUNES OR SPOTIFY
+            let alert = NewYorkAlertController(title: "Error", message: "please select which service you'd like to transfer a playlist to", style: .alert)
+            
+            let cancel = NewYorkButton(title: "ok", style: .cancel)
+            
+            alert.addButton(cancel)
+
+            present(alert, animated: true)
+        }
+        
+    }
+    @objc func loginPressed(_ sender: UIButton) {
+        print("login pressed")
+    }
+    @objc func backPressed(_ sender: UIButton) {
+        print("back button pressed")
+        if(currentStep == "spotify_login") {
+            self.webView.fadeOut()
+            backButton.fadeOut()
+//            addLoginPage1Elements()
+            playVideo(from: "Mobile_Web_BG.m4v")
+        } else if (currentStep == "itunes_login") {
+            backButton.fadeOut()
+            hidePage2Elements()
+            UIView.animate(withDuration: 1, animations: {
+                
+                self.iTunesImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 - 75,y: 200,width: 64, height: 64)
+            }) { _ in
+                self.iTunesImage.removeFromSuperview()
+//                self.addLoginPage1Elements()
+                self.playVideo(from: "Mobile_Web_BG.m4v")
+            }
+        }
+        
+    }
+    @objc func iTunesPressed(_ sender: UIButton) {
+        print("iTunes button pressed")
+        iTunesImage.layer.borderColor = hexStringToUIColor(hex: "#cccccc").cgColor
+        iTunesImage.layer.cornerRadius = iTunesImage.frame.width / 2
+        iTunesImage.layer.borderWidth = 5
+        spotifyImage.layer.borderWidth = 0
+        transferringFrom = "itunes"
+        continueButton.backgroundColor = .white
+        continueButton.setTitleColor(hexStringToUIColor(hex: "#b8b8b8"), for: .normal)
+        currentStep = "itunes_login"
+    }
+    @objc func spotifyPressed(_ sender: UIButton) {
+        print("spotify button pressed")
+        currentStep = "spotify_login"
+//        add a grey border around the selected button
+        spotifyImage.layer.borderColor = hexStringToUIColor(hex: "#cccccc").cgColor
+        //make it so that the border is circular and not a square
+        spotifyImage.layer.cornerRadius = iTunesImage.frame.width / 2
+        //make the border bigger (5px) make this number bigger to make the border bigger
+        spotifyImage.layer.borderWidth = 5
+        iTunesImage.layer.borderWidth = 0
+        //for internal use: transferringFrom variable
+        transferringFrom = "spotify"
+        
+        //make Continuebutton more "clickable"
+        continueButton.backgroundColor = .white
+        continueButton.setTitleColor(hexStringToUIColor(hex: "#b8b8b8"), for: .normal)
+    }
     @objc func logginPressed(_ sender: UIButton) {
         print("login button pressed")
     }
@@ -612,7 +788,7 @@ extension UIView {
             self.alpha = 1.0
     }, completion: completion)  }
 
-    func fadeOut(_ duration: TimeInterval = 0.5, delay: TimeInterval = 1.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
+    func fadeOut(_ duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
         UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
             self.alpha = 0.0
     }, completion: completion)
@@ -652,7 +828,7 @@ extension UIView {
   func dropShadow(scale: Bool = true) {
     layer.masksToBounds = false
     layer.shadowColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
-    layer.shadowOpacity = 0.3
+    layer.shadowOpacity = 0.4
       layer.cornerRadius = 5
 //      layer.masksToBounds = true
       

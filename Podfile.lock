@@ -1,24 +1,28 @@
 PODS:
   - AnimatedGradientView (3.1.0)
   - KeychainAccess (4.2.2)
+  - NewYorkAlert (1.0.0)
   - RAGTextField (0.14.0)
 
 DEPENDENCIES:
   - AnimatedGradientView
   - KeychainAccess
+  - NewYorkAlert
   - RAGTextField
 
 SPEC REPOS:
   trunk:
     - AnimatedGradientView
     - KeychainAccess
+    - NewYorkAlert
     - RAGTextField
 
 SPEC CHECKSUMS:
   AnimatedGradientView: f249740238c6b491a10d505ab06bb98d897ca3a7
   KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  NewYorkAlert: cf254ead7dabf55f3bdb728e56673a855034722f
   RAGTextField: ebeab17ae88ce880a85601af33edc2879fa53813
 
-PODFILE CHECKSUM: 45ad1cee7df4d18d144d02a18a62abc0c1cc84ec
+PODFILE CHECKSUM: 5ad50d4231c0103801e1ee45e041b781b778c9e3
 
 COCOAPODS: 1.11.2

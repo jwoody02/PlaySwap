@@ -9,4 +9,5 @@ target 'PlaySwap' do
   pod "AnimatedGradientView"
   pod 'KeychainAccess'
   pod "RAGTextField"
+  pod 'NewYorkAlert'
 end

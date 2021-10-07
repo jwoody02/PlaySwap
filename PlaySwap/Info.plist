@@ -4,12 +4,12 @@
 <dict>
 	<key>CLIENT_ID</key>
 	<string>2691e10cde6f4efe9e879fe9a2c9f913</string>
+	<key>CLIENT_SECRET</key>
+	<string>616b473990aa4204b057f02edcf062fa</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Hypermarket W00 Regular.ttf</string>
 	</array>
-	<key>CLIENT_SECRET</key>
-	<string>616b473990aa4204b057f02edcf062fa</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -29,5 +29,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 </dict>
 </plist>
