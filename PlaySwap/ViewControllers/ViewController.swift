@@ -30,6 +30,8 @@ class ViewController: UIViewController, WKNavigationDelegate {
     var iTunesButton = UIButton()
     var spotifyButton = UIButton()
     
+    var searchBar = UITextField()
+    
     var backButton = UIButton()
     
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
@@ -489,6 +491,13 @@ class ViewController: UIViewController, WKNavigationDelegate {
     }
     func showSearchPart1() {
         //LOGAN HERE YOU CAN PUT YOUR UI
+        searchBar = createTextField()
+        searchBar.placeholder = "Search or paste playlist link"
+        let phoneWidth = UIScreen.main.bounds.width
+        let phoneHeight = UIScreen.main.bounds.height
+        let searchBarWidth = 300
+        searchBar.frame = CGRect(x: (Int(phoneWidth/2) - (searchBarWidth/2)), y: 200, width: searchBarWidth, height: 50)
+        searchBar.backgroundColor = .lightGray
     }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         //WEBVIEW HAS STARTED LOADING GOOGLE.COM USE THIS TO GET AUTH CODE
@@ -509,7 +518,10 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     //EXAMPLE SEARCH FUNCTION
 //                    self.searchForSong(query: "shoota playboi carti", type: .track)
 //                    self.searchForSong(query: "bb shit", type: .playlist)
-                    self.showSearchPart1()
+                    DispatchQueue.main.sync {
+                        self.showSearchPart1()
+                    }
+                    
                     case .failure(let error):
                         if let authError = error as? SpotifyAuthorizationError, authError.accessWasDenied {
                             print("The user denied the authorization request")
