@@ -13,14 +13,18 @@ import WebKit
 import AVKit
 import AVFoundation
 import NewYorkAlert
-
-class ViewController: UIViewController, WKNavigationDelegate {
+class searchTableViewCell: UITableViewCell {
+    @IBOutlet weak var playlistNameLabel: UILabel!
+    @IBOutlet weak var playlistCreaterLabel: UILabel!
+    
+    @IBOutlet weak var playlistCoverPhoto: UIImageView!
+}
+class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
     var emailField = UITextField()
     var passwordField = UITextField()
     var webView = WKWebView()
     var loginButton = UIButton()
-    var searchResultsTableView = UITableView()
     
     //LOGIN PAGE PART 1
     var chooseService = UILabel()
@@ -30,9 +34,12 @@ class ViewController: UIViewController, WKNavigationDelegate {
     var iTunesButton = UIButton()
     var spotifyButton = UIButton()
     
+    //SEARCH PAGE
     var searchBar = UITextField()
+    @IBOutlet weak var searchResultsViewController: UITableView!
     
     var backButton = UIButton()
+    var spotifySearchResults : [Playlist<PlaylistItemsReference>] = []
     
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
         clientId: "", clientSecret: ""
@@ -74,6 +81,8 @@ class ViewController: UIViewController, WKNavigationDelegate {
                 clientId: UIApplication.clientId ?? "", clientSecret: UIApplication.clientSecret ?? ""
             )
         )
+        searchResultsViewController.delegate = self
+        searchResultsViewController.dataSource = self
         //JUST MAKING WEBVIEW VISIBLE
         webView.navigationDelegate = self
         view.addSubview(webView)
@@ -82,8 +91,29 @@ class ViewController: UIViewController, WKNavigationDelegate {
         
         //ACTUALLY LOAD AUTHENTICATION URL & LOAD INTO APP
 //        loadSpotifyLogin()
+//        searchBar.delegate = self
+//        searchBar.inputDelegate = self
+        searchResultsViewController.rowHeight = 58
+
+    }
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        print("detected change in text field -- searching")
+        searchSpotify(query: textField.text ?? "", type: .playlist)
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return spotifySearchResults.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
         
+        cell.playlistCoverPhoto.image = nil
+        //SET LABELS AND SUCH
+        cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
+        cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
+        cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
         
+        return cell
     }
     private func playVideo(from file:String) {
         let file = file.components(separatedBy: ".")
@@ -323,11 +353,11 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
         
     }
-    func searchForSong(query: String, type: IDCategory) {
+    func searchSpotify(query: String, type: IDCategory) {
         //INCLUDE ARTIST SO: GOOSEBUMPS TRAVIS SCOTT
         var returnVal: SpotifyWebAPI.Track!
-        
-        self.spotify.search(query: query, categories: [type])
+        self.spotifySearchResults.removeAll()
+        self.spotify.search(query: query, categories: [type], limit: 7)
             .sink(
                 receiveCompletion: { completion in
 //                    return completion
@@ -352,8 +382,15 @@ class ViewController: UIViewController, WKNavigationDelegate {
                         print("******************************************************")
 //                        print(bestResult)
 //                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
-                        self.getPlayListItemsFrom(uri: uri, offset: 0)
+//                        self.getPlayListItemsFrom(uri: uri, offset: 0)
+                        for result in results.playlists!.items {
+                            self.spotifySearchResults.append(result)
+                        }
                         
+                        DispatchQueue.main.async {
+                            
+                            self.searchResultsViewController.reloadData()
+                        }
                     } else if (type == .track) {
                         let bestResult = results.tracks!.items[0]
                         print("******************************************************")
@@ -492,12 +529,20 @@ class ViewController: UIViewController, WKNavigationDelegate {
     func showSearchPart1() {
         //LOGAN HERE YOU CAN PUT YOUR UI
         searchBar = createTextField()
-        searchBar.placeholder = "Search or paste playlist link"
+        searchBar.placeholder = "Search or paste link for playlist"
         let phoneWidth = UIScreen.main.bounds.width
         let phoneHeight = UIScreen.main.bounds.height
         let searchBarWidth = 300
-        searchBar.frame = CGRect(x: (Int(phoneWidth/2) - (searchBarWidth/2)), y: 200, width: searchBarWidth, height: 50)
-        searchBar.backgroundColor = .lightGray
+        searchBar.font = UIFont(name: "HypermarketW00-Regular", size: 14)
+        searchBar.backgroundColor = .white
+        searchBar.textColor = hexStringToUIColor(hex: "#b8b8b8")
+        searchBar.layer.cornerRadius = 5
+        searchBar.frame = CGRect(x: (Int(phoneWidth)/2) - (searchBarWidth/2), y: 200, width: searchBarWidth, height: 45)
+        searchBar.setLeftPaddingPoints(20)
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = hexStringToUIColor(hex: "#b8b8b8").withAlphaComponent(0.5).cgColor
+        searchBar.addTarget(self, action: #selector(searchBarPressed(_:)), for: .touchDown)
+        searchBar.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), for: .editingChanged)
     }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         //WEBVIEW HAS STARTED LOADING GOOGLE.COM USE THIS TO GET AUTH CODE
@@ -518,7 +563,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
                     //EXAMPLE SEARCH FUNCTION
 //                    self.searchForSong(query: "shoota playboi carti", type: .track)
 //                    self.searchForSong(query: "bb shit", type: .playlist)
-                    DispatchQueue.main.sync {
+                    DispatchQueue.main.async {
                         self.showSearchPart1()
                     }
                     
@@ -636,6 +681,22 @@ class ViewController: UIViewController, WKNavigationDelegate {
         guard let rawValue = getenv(name) else { return nil }
         
         return String(utf8String: rawValue)
+    }
+    @objc func searchBarPressed(_ sender: UITextField) {
+        print("searchBarpressed pressed")
+        searchResultsViewController.frame = CGRect(x: 5, y: 90+45, width: UIScreen.main.bounds.width - 10, height: UIScreen.main.bounds.height - 80 - 45)
+        if(searchBar.frame.minY != 80) {
+            UIView.animate(withDuration: 0.4, animations: {
+                
+                self.searchBar.frame = CGRect(x: 20, y: 80, width: UIScreen.main.bounds.width-40, height: 45)
+            }) { _ in
+                self.iTunesImage.removeFromSuperview()
+//                self.addLoginPage1Elements()
+//                self.playVideo(from: "Mobile_Web_BG.m4v")
+            }
+            
+        }
+        
     }
     @objc func continuePressed(_ sender: UIButton) {
         print("continue button pressed")
@@ -864,4 +925,24 @@ extension UIView {
     layer.shouldRasterize = true
     layer.rasterizationScale = scale ? UIScreen.main.scale : 1
   }
+}
+extension UIImageView {
+    func downloaded(from url: URL, contentMode mode: ContentMode = .scaleAspectFit) {
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+            DispatchQueue.main.async() { [weak self] in
+                self?.image = image
+            }
+        }.resume()
+    }
+    func downloaded(from link: String, contentMode mode: ContentMode = .scaleAspectFit) {
+        guard let url = URL(string: link) else { return }
+        downloaded(from: url, contentMode: mode)
+    }
 }
