@@ -36,6 +36,14 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var iTunesButton = UIButton()
     var spotifyButton = UIButton()
     
+    //TRANSFER PAGE
+    var playlistTitleLabel = UILabel()
+    var playlistImage = UIImageView()
+    var playlistDescription = UILabel()
+    var playlistAuthor = UILabel()
+    var playlistTransferButton = UIButton()
+    var playlistContentsTableView = UITableView()
+    
     //SEARCH PAGE
     var searchBar = UITextField()
     @IBOutlet weak var searchResultsViewController: UITableView!
@@ -142,7 +150,15 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         cell.selectButton.tag = indexPath.row
 //        cell.playlistItem = spotifySearchResults[indexPath.row]
         cell.selectionStyle = .none
-        
+        hideSearchResults()
+        showTransferPage()
+        playlistTitleLabel.text = spotifySearchResults[indexPath.row].name
+        if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
+            playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+        } else {
+            //playlist doesnt have image -- show placeholder
+            playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+        }
         return cell
     }
     private func playVideo(from file:String) {
@@ -164,6 +180,30 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //        view.layer.sendSubviewToBack(playerLayer.)
         player.play()
         addLoginPage1Elements()
+    }
+    func showTransferPage(){
+//        DispatchQueue.main.async {
+        self.playlistTitleLabel = self.createLabel()
+        self.playlistTitleLabel.alpha = 0
+        self.playlistTitleLabel.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+        self.playlistTitleLabel.text = "penis".lowercased()
+        self.playlistTitleLabel.frame = CGRect(x: 40, y: 100, width: UIScreen.main.bounds.width-80, height: 64)
+        
+        self.playlistTitleLabel.textAlignment = .center
+        self.playlistTitleLabel.textColor = .black
+        self.playlistTitleLabel.fadeIn()
+        self.playlistImage = self.createImage(named: "")
+        self.playlistImage.alpha = 1
+        self.playlistImage.fadeIn()
+        self.playlistImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 + 75,y: 200,width: 64, height: 64)
+//        }
+    
+}
+    func hideSearchResults(){
+        DispatchQueue.main.async {
+            self.searchBar.fadeOut()
+            self.searchResultsViewController.fadeOut()
+        }
     }
     func addLoginPage1Elements() {
         
