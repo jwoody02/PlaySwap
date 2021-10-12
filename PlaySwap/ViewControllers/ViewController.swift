@@ -93,7 +93,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //        loadSpotifyLogin()
 //        searchBar.delegate = self
 //        searchBar.inputDelegate = self
-        searchResultsViewController.rowHeight = 58
+        searchResultsViewController.rowHeight = 60
 
     }
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -103,15 +103,28 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return spotifySearchResults.count
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+        print(spotifySearchResults[indexPath.row])
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
         
         cell.playlistCoverPhoto.image = nil
         //SET LABELS AND SUCH
-        cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
-        cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
-        cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+        if(spotifySearchResults.count > indexPath.row) {
+            cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
+            cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
+            if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
+                cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+            } else {
+                //playlist doesnt have image -- show placeholder
+                cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+            }
+        }
+        
+        
+        cell.selectionStyle = .none
         
         return cell
     }
@@ -207,12 +220,12 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.backButton.addTarget(self, action: #selector(self.backPressed(_:)), for: .touchUpInside)
                 self.backButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
                 
-                UIView.animate(withDuration: 0.5, animations: {
+                UIView.animate(withDuration: 0.3, animations: {
                     self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY, width: 64, height: 64)
                     self.iTunesImage.layer.borderWidth = 0
                 }) { _ in
 //                    viewToAnimate.removeFromSuperview()
-                    UIView.animate(withDuration: 0.5) {
+                    UIView.animate(withDuration: 0.3) {
                         self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY - 120, width: 64, height: 64)
                         self.backButton.fadeIn()
                         self.addLoginpage2Elements()
@@ -356,55 +369,70 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     func searchSpotify(query: String, type: IDCategory) {
         //INCLUDE ARTIST SO: GOOSEBUMPS TRAVIS SCOTT
         var returnVal: SpotifyWebAPI.Track!
+        self.spotifySearchResults = []
         self.spotifySearchResults.removeAll()
-        self.spotify.search(query: query, categories: [type], limit: 7)
-            .sink(
-                receiveCompletion: { completion in
-//                    return completion
-                    print("completion result: \(completion)")
-                    if case .failure(let error) = completion {
-                                        print("COULD NOT SEARCH PROPERLY")
-                                    }
-                },
-                receiveValue: { results in
-//                    print(results.tracks?.items[0])
-                    //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
-                    
-                    if(type == .playlist) {
-                        let bestResult = results.playlists!.items[0]
-                        let uri = bestResult.uri
-                        print("******************************************************")
-                        print("BEST SEARCH RESULT (PLAYLIST): \(bestResult.name) by \(bestResult.owner!.displayName ?? "")")
-                        print("API ENDPOINT \(bestResult.items.href)")
-                        print("Cover photo: \(bestResult.images[0].url)")
-                        //prints out all elements in playlist
-//                       self.spotify.playlistItems(bestResult)
-                        print("******************************************************")
-//                        print(bestResult)
-//                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
-//                        self.getPlayListItemsFrom(uri: uri, offset: 0)
-                        for result in results.playlists!.items {
-                            self.spotifySearchResults.append(result)
+        if(query != "") {
+            self.spotify.search(query: query, categories: [type], limit: 14)
+                .sink(
+                    receiveCompletion: { completion in
+    //                    return completion
+                        print("completion result: \(completion)")
+                        if case .failure(let error) = completion {
+                                            print("COULD NOT SEARCH PROPERLY")
+                                        }
+                    },
+                    receiveValue: { results in
+    //                    print(results.tracks?.items[0])
+                        //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
+                        
+                        if(type == .playlist) {
+                            if(results.playlists!.items.isNotEmpty) {
+                                let bestResult = results.playlists!.items[0]
+                                let uri = bestResult.uri
+                                print("******************************************************")
+                                print("BEST SEARCH RESULT (PLAYLIST): \(bestResult.name) by \(bestResult.owner!.displayName ?? "")")
+                                print("API ENDPOINT \(bestResult.items.href)")
+                                if(bestResult.images.isEmpty) {
+//                                    bestResult.images.append(SpotifyImage(height: 210, width: 221, url: URL(string: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")!))
+                                } else {
+                                    print("Cover photo: \(bestResult.images[0].url)")
+                                }
+                                
+                                //prints out all elements in playlist
+        //                       self.spotify.playlistItems(bestResult)
+                                print("******************************************************")
+        //                        print(bestResult)
+        //                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
+        //                        self.getPlayListItemsFrom(uri: uri, offset: 0)
+                                print("search length: \(results.playlists!.items.count)")
+                                self.spotifySearchResults = []
+                                self.spotifySearchResults.removeAll()
+                                for result in results.playlists!.items {
+                                    self.spotifySearchResults.append(result)
+                                }
+                                print("spotifysearchresults: \(self.spotifySearchResults.count)")
+                                DispatchQueue.main.async {
+                                    
+                                    self.searchResultsViewController.reloadData()
+                                }
+                            }
+                            
+                        } else if (type == .track) {
+                            let bestResult = results.tracks!.items[0]
+                            print("******************************************************")
+                            print("BEST SEARCH RESULT (TRACK): \(bestResult.name) by \(bestResult.artists![0].name)")
+                            print("Cover photo: \(bestResult.album?.images![0].url.absoluteString as! String)")
+                            print("song uri: \(bestResult.uri)")
+                            print("******************************************************")
                         }
                         
-                        DispatchQueue.main.async {
-                            
-                            self.searchResultsViewController.reloadData()
-                        }
-                    } else if (type == .track) {
-                        let bestResult = results.tracks!.items[0]
-                        print("******************************************************")
-                        print("BEST SEARCH RESULT (TRACK): \(bestResult.name) by \(bestResult.artists![0].name)")
-                        print("Cover photo: \(bestResult.album?.images![0].url.absoluteString as! String)")
-                        print("song uri: \(bestResult.uri)")
-                        print("******************************************************")
+                        
+                        
                     }
-                    
-                    
-                    
-                }
-            )
-            .store(in: &self.cancellables)
+                )
+                .store(in: &self.cancellables)
+        }
+        
 //        return returnVal
     }
     func addSongToQueue(query: String) {
@@ -528,12 +556,15 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     }
     func showSearchPart1() {
         //LOGAN HERE YOU CAN PUT YOUR UI
+        currentStep = "search_1"
         searchBar = createTextField()
-        searchBar.placeholder = "Search or paste link for playlist"
+        searchBar.attributedPlaceholder = NSAttributedString(string: "Search or paste link for playlist",
+                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray.withAlphaComponent(0.7)])
+//        searchBar.placeHolderC
         let phoneWidth = UIScreen.main.bounds.width
         let phoneHeight = UIScreen.main.bounds.height
         let searchBarWidth = 300
-        searchBar.font = UIFont(name: "HypermarketW00-Regular", size: 14)
+        searchBar.font = UIFont(name: "HypermarketW00-Regular", size: 16)
         searchBar.backgroundColor = .white
         searchBar.textColor = hexStringToUIColor(hex: "#b8b8b8")
         searchBar.layer.cornerRadius = 5
@@ -686,7 +717,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         print("searchBarpressed pressed")
         searchResultsViewController.frame = CGRect(x: 5, y: 90+45, width: UIScreen.main.bounds.width - 10, height: UIScreen.main.bounds.height - 80 - 45)
         if(searchBar.frame.minY != 80) {
-            UIView.animate(withDuration: 0.4, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 
                 self.searchBar.frame = CGRect(x: 20, y: 80, width: UIScreen.main.bounds.width-40, height: 45)
             }) { _ in
@@ -727,7 +758,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         } else if (currentStep == "itunes_login") {
             backButton.fadeOut()
             hidePage2Elements()
-            UIView.animate(withDuration: 1, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 
                 self.iTunesImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 - 75,y: 200,width: 64, height: 64)
             }) { _ in
@@ -735,6 +766,23 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //                self.addLoginPage1Elements()
                 self.playVideo(from: "Mobile_Web_BG.m4v")
             }
+        } else if (currentStep == "search_1") {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchBar.alpha = 0
+                self.searchResultsViewController.alpha = 1
+                self.spotifySearchResults.removeAll()
+                self.searchResultsViewController.reloadData()
+                self.backButton.fadeOut()
+                self.searchBar.text = ""
+            }) { _ in
+                let searchBarWidth = 300
+                self.searchBar.frame = CGRect(x: (Int(UIScreen.main.bounds.width)/2) - (searchBarWidth/2), y: 200, width: searchBarWidth, height: 45)
+                
+    //            addLoginPage1Elements()
+                self.playVideo(from: "Mobile_Web_BG.m4v")
+                self.searchBar.removeFromSuperview()
+            }
+            
         }
         
     }
@@ -856,12 +904,12 @@ extension UITextField {
 }
 extension UIView {
 
-    func fadeIn(_ duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
+    func fadeIn(_ duration: TimeInterval = 0.3, delay: TimeInterval = 0.0, completion: @escaping ((Bool) -> Void) = {(finished: Bool) -> Void in}) {
         UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
             self.alpha = 1.0
     }, completion: completion)  }
 
-    func fadeOut(_ duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
+    func fadeOut(_ duration: TimeInterval = 0.3, delay: TimeInterval = 0.0, completion: @escaping (Bool) -> Void = {(finished: Bool) -> Void in}) {
         UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseIn, animations: {
             self.alpha = 0.0
     }, completion: completion)

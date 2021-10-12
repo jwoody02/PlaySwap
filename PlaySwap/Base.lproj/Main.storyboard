@@ -32,31 +32,62 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="58"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="playlist name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="im1-sz-xiW">
-                                                    <rect key="frame" x="74" y="11" width="312" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="playlist name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="im1-sz-xiW">
+                                                    <rect key="frame" x="74" y="11" width="290" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="rtR-fw-EIp"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HypermarketW00-Regular" family="HypermarketW00-Regular" pointSize="18"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="by jwood" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeG-LA-ldm">
-                                                    <rect key="frame" x="74" y="30" width="320" height="18"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="by jwood" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UeG-LA-ldm">
+                                                    <rect key="frame" x="74" y="30" width="290" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="18" id="NML-Lt-WC7"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HypermarketW00-Regular" family="HypermarketW00-Regular" pointSize="15"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2eM-Xi-78b">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2eM-Xi-78b">
                                                     <rect key="frame" x="16" y="6" width="47" height="47"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="47" id="Hdq-7M-ULe"/>
+                                                        <constraint firstAttribute="height" constant="47" id="s2k-g8-zmG"/>
+                                                    </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="5"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.right.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="d4x-CC-ZoC">
+                                                    <rect key="frame" x="374" y="1" width="20" height="57"/>
+                                                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="JqM-aO-Ba0"/>
+                                                        <constraint firstAttribute="height" constant="58" id="cav-we-uvj"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="d4x-CC-ZoC" secondAttribute="bottom" constant="-11.5" id="0jp-XY-SY4"/>
+                                                <constraint firstAttribute="bottom" secondItem="2eM-Xi-78b" secondAttribute="bottom" constant="5" id="3HF-1k-YnO"/>
+                                                <constraint firstItem="2eM-Xi-78b" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="top" constant="6" id="BIJ-c6-6BU"/>
+                                                <constraint firstItem="im1-sz-xiW" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="topMargin" id="EFh-AS-tYo"/>
+                                                <constraint firstItem="UeG-LA-ldm" firstAttribute="leading" secondItem="2eM-Xi-78b" secondAttribute="trailing" constant="11" id="EGb-mb-yT1"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="im1-sz-xiW" secondAttribute="bottom" constant="15" id="Kyv-sF-DW6"/>
+                                                <constraint firstItem="im1-sz-xiW" firstAttribute="leading" secondItem="2eM-Xi-78b" secondAttribute="trailing" constant="11" id="PHZ-46-nHn"/>
+                                                <constraint firstAttribute="bottom" secondItem="UeG-LA-ldm" secondAttribute="bottom" constant="10" id="USP-71-0Fz"/>
+                                                <constraint firstItem="d4x-CC-ZoC" firstAttribute="leading" secondItem="im1-sz-xiW" secondAttribute="trailing" constant="10" id="VQf-Gf-fLk"/>
+                                                <constraint firstItem="2eM-Xi-78b" firstAttribute="leading" secondItem="hHJ-sB-ohH" secondAttribute="leading" constant="16" id="YrR-WE-ulW"/>
+                                                <constraint firstItem="UeG-LA-ldm" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="top" constant="30" id="aN5-l2-CmK"/>
+                                                <constraint firstItem="d4x-CC-ZoC" firstAttribute="trailing" secondItem="hHJ-sB-ohH" secondAttribute="trailingMargin" id="ebm-PK-nsf"/>
+                                                <constraint firstItem="d4x-CC-ZoC" firstAttribute="leading" secondItem="UeG-LA-ldm" secondAttribute="trailing" constant="10" id="rOc-KC-Jxb"/>
+                                                <constraint firstItem="d4x-CC-ZoC" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="topMargin" constant="-10.5" id="u9Y-RZ-Qc1"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
@@ -80,4 +111,7 @@
             <point key="canvasLocation" x="18.840579710144929" y="77.678571428571431"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
+    </resources>
 </document>
