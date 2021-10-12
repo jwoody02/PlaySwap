@@ -18,6 +18,7 @@ class searchTableViewCell: UITableViewCell {
     @IBOutlet weak var playlistCreaterLabel: UILabel!
     
     @IBOutlet weak var playlistCoverPhoto: UIImageView!
+    var playlistItem: Playlist<PlaylistItemsReference>!
 }
 class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
@@ -83,6 +84,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         )
         searchResultsViewController.delegate = self
         searchResultsViewController.dataSource = self
+        self.view.bringSubviewToFront(searchResultsViewController)
         //JUST MAKING WEBVIEW VISIBLE
         webView.navigationDelegate = self
         view.addSubview(webView)
@@ -104,8 +106,11 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         return spotifySearchResults.count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
 //        tableView.deselectRow(at: indexPath, animated: true)
         print(spotifySearchResults[indexPath.row])
+        print("internal uri: \(spotifySearchResults[indexPath.row].uri)")
+        getPlayListItemsFrom(uri: spotifySearchResults[indexPath.row].uri, offset: 0)
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
@@ -123,7 +128,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             }
         }
         
-        
+//        cell.playlistItem = spotifySearchResults[indexPath.row]
         cell.selectionStyle = .none
         
         return cell
@@ -152,6 +157,8 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         
         //CoNTINUE BUTTON AT BOTTOM
         continueButton = createButton()
+        iTunesButton.fadeIn()
+        spotifyButton.fadeIn()
         continueButton.alpha = 0
         continueButton.setTitle("continue", for: .normal)
         continueButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
@@ -210,6 +217,8 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         if(transferringFrom == "itunes") {
             DispatchQueue.main.async {
                 self.spotifyImage.fadeOut()
+                self.iTunesButton.fadeOut()
+                self.spotifyButton.fadeOut()
                 
                 //ALL ANIMATION STUFF TO MOVE ITUNES ICON AROUND
                 self.backButton = self.createButton()
@@ -241,6 +250,8 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             DispatchQueue.main.async {
                 self.iTunesImage.fadeOut()
                 self.spotifyImage.fadeOut()
+                self.iTunesButton.fadeOut()
+                self.spotifyButton.fadeOut()
                 self.backButton = self.createButton()
                 self.backButton.alpha = 0
                 self.backButton.setTitle("⇽ back", for: .normal)
@@ -478,9 +489,9 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //                results.items
                 print("* total amount of songs loaded in playlist: \(songArr.count)")
 //                self.addSongsToPlaylist(playlist: uri as! SpotifyURIConvertible, uris: songArr)
-//                if(results.next != nil) {
-//                    self.getPlayListItemsFrom(uri: uri, offset: (offset ?? 0)+50)
-//                }
+                if(results.next != nil) {
+                    self.getPlayListItemsFrom(uri: uri, offset: (offset ?? 0)+100)
+                }
 //                print(songArr)
                 //EXAMPLE TO ADD MULTIPLE SONGS TO PLAYLIST
 //                self.addSongsToPlaylist(playlist: "spotify:playlist:78aV5gMM133PC1AOFhqe2v", uris: songArr)
@@ -767,8 +778,10 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.playVideo(from: "Mobile_Web_BG.m4v")
             }
         } else if (currentStep == "search_1") {
+            self.searchBar.fadeOut()
             UIView.animate(withDuration: 0.3, animations: {
-                self.searchBar.alpha = 0
+//                self.searchBar.alpha = 0
+                
                 self.searchResultsViewController.alpha = 1
                 self.spotifySearchResults.removeAll()
                 self.searchResultsViewController.reloadData()
