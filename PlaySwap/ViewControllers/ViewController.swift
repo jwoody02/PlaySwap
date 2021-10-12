@@ -13,6 +13,8 @@ import WebKit
 import AVKit
 import AVFoundation
 import NewYorkAlert
+import StoreKit
+
 class searchTableViewCell: UITableViewCell {
     @IBOutlet weak var playlistNameLabel: UILabel!
     @IBOutlet weak var playlistCreaterLabel: UILabel!
@@ -20,6 +22,19 @@ class searchTableViewCell: UITableViewCell {
     @IBOutlet weak var playlistCoverPhoto: UIImageView!
     @IBOutlet weak var selectButton: UIButton!
     var playlistItem: Playlist<PlaylistItemsReference>!
+}
+struct AppleMusicSong {
+    var id: String
+    var name: String
+    var artistName: String
+    var artworkURL: String
+ 
+    init(id: String, name: String, artistName: String, artworkURL: String) {
+        self.id = id
+        self.name = name
+        self.artworkURL = artworkURL
+        self.artistName = artistName
+    }
 }
 class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
@@ -36,17 +51,18 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var iTunesButton = UIButton()
     var spotifyButton = UIButton()
     
+    //SEARCH PAGE
+    var searchBar = UITextField()
+    @IBOutlet weak var searchResultsViewController: UITableView!
+    
     //TRANSFER PAGE
     var playlistTitleLabel = UILabel()
     var playlistImage = UIImageView()
     var playlistDescription = UILabel()
     var playlistAuthor = UILabel()
+    var playlistAuthorImage = UIImageView()
     var playlistTransferButton = UIButton()
     var playlistContentsTableView = UITableView()
-    
-    //SEARCH PAGE
-    var searchBar = UITextField()
-    @IBOutlet weak var searchResultsViewController: UITableView!
     
     var backButton = UIButton()
     var spotifySearchResults : [Playlist<PlaylistItemsReference>] = []
@@ -62,6 +78,9 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     private var cancellables: Set<AnyCancellable> = []
     var transferType = "spotify" //spotify or itunes
     var currentStep = "choose_service"
+    
+//    ITUNES API KEY
+    let developerToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjU2NUNRMzg2NjUifQ.eyJpc3MiOiJaUkdVNTZGSDRMIiwiZXhwIjoxNjQ5ODQzODU5LCJpYXQiOjE2MzQwNzU4NTl9.Em7ap9NGQiLQp3cOU0kuccIPwDpXwQJAHzwkhPd7RPoFncnINUNCjnV6uxzVCS9MK0YOok3Rpa2ghVu7roFk7A"
     override func viewDidLoad() {
         super.viewDidLoad()
         //Here I just make a massive fucking itunes png in the middle of the screen
@@ -105,7 +124,99 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //        searchBar.delegate = self
 //        searchBar.inputDelegate = self
         searchResultsViewController.rowHeight = 60
+        searchResultsViewController.keyboardDismissMode = .onDrag
+    }
+    func getUserToken(completion: @escaping(_ userToken: String) -> Void) -> Void {
+        SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
+              guard error == nil else {
+                   return
+              }
+            print("got user token: \(userToken)")
+              completion(userToken ?? "")
+        }
+    }
+    func fetchStorefrontID(completion: @escaping(String) -> Void){
+        SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
+              guard error == nil else {
+                   return
+              }
+            print("got user token: \(userToken)")
+            var storefrontID: String!
+            let musicURL = URL(string: "https://api.music.apple.com/v1/me/storefront")!
+            var musicRequest = URLRequest(url: musicURL)
+            musicRequest.httpMethod = "GET"
+            musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
+            musicRequest.addValue(userToken ?? "", forHTTPHeaderField: "Music-User-Token")
+               
+            URLSession.shared.dataTask(with: musicRequest) { (data, response, error) in
+                 guard error == nil else { return }
+                   
+                 if let json = try? JSON(data: data!) {
+                     let result = (json["data"]).array!
+                     let id = (result[0].dictionaryValue)["id"]!
+                     storefrontID = id.stringValue
+                     completion(storefrontID)
+                 }
+            }.resume()
+        }
+         
+    }
+    func hideSearchResults(){
+            DispatchQueue.main.async {
+                self.searchBar.fadeOut()
+                self.searchResultsViewController.fadeOut()
+            }
+        }
+    func showTransferPage(){
+        currentStep = "transfer_page"
+        dismissKeyboard()
+    //        DispatchQueue.main.async {
+//        GENERAL PLAYLIST INFO
+        self.playlistTitleLabel = self.createLabel()
+        self.playlistTitleLabel.alpha = 0
+        self.playlistTitleLabel.font = UIFont(name: "HypermarketW00-Regular", size: 20)
+        self.playlistTitleLabel.text = ""
+        self.playlistTitleLabel.frame = CGRect(x: 20, y: 310, width: UIScreen.main.bounds.width-40, height: 18)
+        self.playlistTitleLabel.textAlignment = .left
+        self.playlistTitleLabel.textColor = .black
+        self.playlistTitleLabel.fadeIn()
 
+        
+        self.playlistDescription = self.createLabel()
+        self.playlistDescription.alpha = 0
+        self.playlistDescription.font = UIFont(name: "HypermarketW00-Regular", size: 12)
+        self.playlistDescription.text = "[no description]"
+        self.playlistDescription.frame = CGRect(x: 20, y: 310+28, width: UIScreen.main.bounds.width-40, height: 18)
+        self.playlistDescription.textAlignment = .left
+        self.playlistDescription.textColor = .lightGray
+        self.playlistDescription.fadeIn()
+        
+        
+        self.playlistAuthor = self.createLabel()
+        self.playlistAuthor.alpha = 0
+        self.playlistAuthor.font = UIFont(name: "HypermarketW00-Regular", size: 12)
+        self.playlistAuthor.text = "[no author]"
+        self.playlistAuthor.frame = CGRect(x: 18+42, y: 310+28+30, width: UIScreen.main.bounds.width-40, height: 18)
+        self.playlistAuthor.textAlignment = .left
+        self.playlistAuthor.textColor = .black
+        self.playlistAuthor.fadeIn()
+        
+        
+        //IMAGES AND AUTHOR INFO
+        self.playlistImage = self.createImage(named: "")
+        self.playlistImage.dropShadow()
+        self.playlistImage.layer.cornerRadius = 5
+        self.playlistImage.fadeIn()
+        self.playlistImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-100,y: 80,width: 200, height: 200)
+        //AUTTHOR IMAGE
+        self.playlistAuthorImage = self.createImage(named: "")
+        self.playlistAuthorImage.dropShadow()
+//        self.playlistAuthorImage.layer.cornerRadius = 5
+        self.playlistAuthorImage.fadeIn()
+        self.playlistAuthorImage.frame = CGRect(x: 20,y: 310+28+25,width: 30, height: 30)
+        self.playlistAuthorImage.layer.cornerRadius = playlistAuthorImage.frame.width / 2 //creates a circular image
+    //        }
+        
     }
     func selectRow(tableView: UITableView, position: Int) {
         let sizeTable = tableView.numberOfRows(inSection: 0)
@@ -118,6 +229,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         print("selecting row \(sender.tag)")
         selectRow(tableView: searchResultsViewController,position: sender.tag)
     }
+    
     @objc func textFieldDidChange(_ textField: UITextField) {
         print("detected change in text field -- searching")
         searchSpotify(query: textField.text ?? "", type: .playlist)
@@ -125,12 +237,61 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return spotifySearchResults.count
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
 //        tableView.deselectRow(at: indexPath, animated: true)
         print(spotifySearchResults[indexPath.row])
         print("internal uri: \(spotifySearchResults[indexPath.row].uri)")
         getPlayListItemsFrom(uri: spotifySearchResults[indexPath.row].uri, offset: 0)
+        hideSearchResults()
+        showTransferPage()
+        if(spotifySearchResults.count >= indexPath.row) {
+            playlistTitleLabel.text = spotifySearchResults[indexPath.row].name
+            if(spotifySearchResults[indexPath.row].description != "") {
+                playlistDescription.text = spotifySearchResults[indexPath.row].description
+            }
+            
+            playlistAuthor.text = spotifySearchResults[indexPath.row].owner?.displayName
+            //ALL THIS IS TO PUT OWNER'S PROFILE PICTURE IN
+            spotify.userProfile(spotifySearchResults[indexPath.row].owner?.uri as! SpotifyURIConvertible).sink(
+                receiveCompletion: { completion in
+                    
+                },
+                receiveValue: { results in
+                    print(results)
+                    DispatchQueue.main.async {
+                        if((results.images!.isNotEmpty)) {
+                            print("* USERS PROFILE PICS: \(results.images)")
+                            self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
+                            self.playlistAuthorImage.fadeIn()
+                            self.playlistAuthorImage.clipsToBounds = true
+                            self.playlistImage.clipsToBounds = true
+                        } else {
+                            //playlist doesnt have image -- show placeholder
+                            self.playlistAuthorImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                            self.playlistAuthorImage.fadeIn()
+                            self.playlistAuthorImage.clipsToBounds = true
+                            self.playlistImage.clipsToBounds = true
+                        }
+                    }
+                    
+                }
+            )
+            .store(in: &self.cancellables)
+            
+            print("*playlist description: \(spotifySearchResults[indexPath.row].description)")
+        }
+        
+        playlistImage.alpha = 0
+        if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
+            playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+            playlistImage.fadeIn()
+        } else {
+            //playlist doesnt have image -- show placeholder
+            playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+            playlistImage.fadeIn()
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
@@ -141,24 +302,19 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
             cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
             if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
-                cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+                print("playlist images: \(spotifySearchResults[indexPath.row].images)")
+                cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images.last!.url)
+                cell.playlistCoverPhoto.contentMode = .scaleAspectFill
             } else {
                 //playlist doesnt have image -- show placeholder
                 cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                cell.playlistCoverPhoto.contentMode = .scaleAspectFill
             }
         }
         cell.selectButton.tag = indexPath.row
 //        cell.playlistItem = spotifySearchResults[indexPath.row]
         cell.selectionStyle = .none
-        hideSearchResults()
-        showTransferPage()
-        playlistTitleLabel.text = spotifySearchResults[indexPath.row].name
-        if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
-            playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
-        } else {
-            //playlist doesnt have image -- show placeholder
-            playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
-        }
+        
         return cell
     }
     private func playVideo(from file:String) {
@@ -180,30 +336,6 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //        view.layer.sendSubviewToBack(playerLayer.)
         player.play()
         addLoginPage1Elements()
-    }
-    func showTransferPage(){
-//        DispatchQueue.main.async {
-        self.playlistTitleLabel = self.createLabel()
-        self.playlistTitleLabel.alpha = 0
-        self.playlistTitleLabel.font = UIFont(name: "HypermarketW00-Regular", size: 16)
-        self.playlistTitleLabel.text = "penis".lowercased()
-        self.playlistTitleLabel.frame = CGRect(x: 40, y: 100, width: UIScreen.main.bounds.width-80, height: 64)
-        
-        self.playlistTitleLabel.textAlignment = .center
-        self.playlistTitleLabel.textColor = .black
-        self.playlistTitleLabel.fadeIn()
-        self.playlistImage = self.createImage(named: "")
-        self.playlistImage.alpha = 1
-        self.playlistImage.fadeIn()
-        self.playlistImage.frame = CGRect(x: (UIScreen.main.bounds.width/2)-32 + 75,y: 200,width: 64, height: 64)
-//        }
-    
-}
-    func hideSearchResults(){
-        DispatchQueue.main.async {
-            self.searchBar.fadeOut()
-            self.searchResultsViewController.fadeOut()
-        }
     }
     func addLoginPage1Elements() {
         
@@ -271,7 +403,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.spotifyImage.fadeOut()
                 self.iTunesButton.fadeOut()
                 self.spotifyButton.fadeOut()
-                
+                self.iTunesImage.fadeOut()
                 //ALL ANIMATION STUFF TO MOVE ITUNES ICON AROUND
                 self.backButton = self.createButton()
                 self.backButton.alpha = 0
@@ -280,22 +412,35 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.backButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 18)
                 self.backButton.addTarget(self, action: #selector(self.backPressed(_:)), for: .touchUpInside)
                 self.backButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
-                
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY, width: 64, height: 64)
-                    self.iTunesImage.layer.borderWidth = 0
-                }) { _ in
-//                    viewToAnimate.removeFromSuperview()
-                    UIView.animate(withDuration: 0.3) {
-                        self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY - 120, width: 64, height: 64)
-                        self.backButton.fadeIn()
-                        self.addLoginpage2Elements()
+                print("attempting to get user to sign in")
+                SKCloudServiceController.requestAuthorization { [self] (status) in
+                        if status == .authorized {
+                            print("we're authorized?")
+                            self.fetchStorefrontID(){ storefrontID in
+                                print("storefront:")
+                                print(storefrontID)
+                                //anything you want to do with storefrontID here
+                            }
+                            
+                        } else {
+                            print("looks like we arent authorized: \(status)")
+                        }
                     }
-                    
-//                    self.emailField.fadeIn()
-//                    self.passwordField.fadeIn()
-                    
-                }
+//                UIView.animate(withDuration: 0.3, animations: {
+//                    self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY, width: 64, height: 64)
+//                    self.iTunesImage.layer.borderWidth = 0
+//                }) { _ in
+////                    viewToAnimate.removeFromSuperview()
+//                    UIView.animate(withDuration: 0.3) {
+//                        self.iTunesImage.frame = CGRect(x: UIScreen.main.bounds.width/2 - 32, y: self.iTunesImage.frame.minY - 120, width: 64, height: 64)
+//                        self.backButton.fadeIn()
+//                        self.addLoginpage2Elements()
+//                    }
+//
+////                    self.emailField.fadeIn()
+////                    self.passwordField.fadeIn()
+//
+//                }
                 
             }
         } else {
@@ -531,6 +676,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             receiveValue: { results in
 //                    print(results.tracks?.items[0])
                 //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
+//                print(results)
                 var songArr: [SpotifyURIConvertible] = []
 //                print()
                 for n in 0...results.items.count-1 {
@@ -830,6 +976,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.playVideo(from: "Mobile_Web_BG.m4v")
             }
         } else if (currentStep == "search_1") {
+            
             self.searchBar.fadeOut()
             UIView.animate(withDuration: 0.3, animations: {
 //                self.searchBar.alpha = 0
@@ -848,6 +995,15 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.searchBar.removeFromSuperview()
             }
             
+        } else if (currentStep == "transfer_page") {
+            self.playlistImage.fadeOut()
+            self.playlistAuthor.fadeOut()
+            self.playlistDescription.fadeOut()
+            self.playlistAuthorImage.fadeOut()
+            self.playlistTitleLabel.fadeOut()
+            searchBar.fadeIn()
+            searchResultsViewController.fadeIn()
+            currentStep = "search_1"
         }
         
     }
