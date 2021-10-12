@@ -18,6 +18,7 @@ class searchTableViewCell: UITableViewCell {
     @IBOutlet weak var playlistCreaterLabel: UILabel!
     
     @IBOutlet weak var playlistCoverPhoto: UIImageView!
+    @IBOutlet weak var selectButton: UIButton!
     var playlistItem: Playlist<PlaylistItemsReference>!
 }
 class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -98,6 +99,17 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         searchResultsViewController.rowHeight = 60
 
     }
+    func selectRow(tableView: UITableView, position: Int) {
+        let sizeTable = tableView.numberOfRows(inSection: 0)
+        guard position >= 0 && position < sizeTable else { return }
+        let indexPath = IndexPath(row: position, section: 0)
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+        tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
+    }
+    @IBAction func cellPressed(_ sender: UIButton) {
+        print("selecting row \(sender.tag)")
+        selectRow(tableView: searchResultsViewController,position: sender.tag)
+    }
     @objc func textFieldDidChange(_ textField: UITextField) {
         print("detected change in text field -- searching")
         searchSpotify(query: textField.text ?? "", type: .playlist)
@@ -127,7 +139,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
             }
         }
-        
+        cell.selectButton.tag = indexPath.row
 //        cell.playlistItem = spotifySearchResults[indexPath.row]
         cell.selectionStyle = .none
         

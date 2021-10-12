@@ -70,6 +70,14 @@
                                                         <constraint firstAttribute="height" constant="58" id="cav-we-uvj"/>
                                                     </constraints>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfd-GF-pyg">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="58"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain"/>
+                                                    <connections>
+                                                        <action selector="cellPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PcE-zW-Pjl"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -79,13 +87,17 @@
                                                 <constraint firstItem="im1-sz-xiW" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="topMargin" id="EFh-AS-tYo"/>
                                                 <constraint firstItem="UeG-LA-ldm" firstAttribute="leading" secondItem="2eM-Xi-78b" secondAttribute="trailing" constant="11" id="EGb-mb-yT1"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="im1-sz-xiW" secondAttribute="bottom" constant="15" id="Kyv-sF-DW6"/>
+                                                <constraint firstItem="d4x-CC-ZoC" firstAttribute="leading" secondItem="kfd-GF-pyg" secondAttribute="trailing" constant="-40" id="OFi-lA-SaV"/>
                                                 <constraint firstItem="im1-sz-xiW" firstAttribute="leading" secondItem="2eM-Xi-78b" secondAttribute="trailing" constant="11" id="PHZ-46-nHn"/>
                                                 <constraint firstAttribute="bottom" secondItem="UeG-LA-ldm" secondAttribute="bottom" constant="10" id="USP-71-0Fz"/>
                                                 <constraint firstItem="d4x-CC-ZoC" firstAttribute="leading" secondItem="im1-sz-xiW" secondAttribute="trailing" constant="10" id="VQf-Gf-fLk"/>
                                                 <constraint firstItem="2eM-Xi-78b" firstAttribute="leading" secondItem="hHJ-sB-ohH" secondAttribute="leading" constant="16" id="YrR-WE-ulW"/>
                                                 <constraint firstItem="UeG-LA-ldm" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="top" constant="30" id="aN5-l2-CmK"/>
+                                                <constraint firstItem="kfd-GF-pyg" firstAttribute="leading" secondItem="hHJ-sB-ohH" secondAttribute="leading" id="bEF-mU-x7E"/>
+                                                <constraint firstAttribute="bottom" secondItem="kfd-GF-pyg" secondAttribute="bottom" id="bqj-aa-8Ww"/>
                                                 <constraint firstItem="d4x-CC-ZoC" firstAttribute="trailing" secondItem="hHJ-sB-ohH" secondAttribute="trailingMargin" id="ebm-PK-nsf"/>
                                                 <constraint firstItem="d4x-CC-ZoC" firstAttribute="leading" secondItem="UeG-LA-ldm" secondAttribute="trailing" constant="10" id="rOc-KC-Jxb"/>
+                                                <constraint firstItem="kfd-GF-pyg" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="top" id="swz-Zc-hef"/>
                                                 <constraint firstItem="d4x-CC-ZoC" firstAttribute="top" secondItem="hHJ-sB-ohH" secondAttribute="topMargin" constant="-10.5" id="u9Y-RZ-Qc1"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -94,6 +106,7 @@
                                             <outlet property="playlistCoverPhoto" destination="2eM-Xi-78b" id="Cbs-mZ-Ams"/>
                                             <outlet property="playlistCreaterLabel" destination="UeG-LA-ldm" id="ATl-Hk-DcF"/>
                                             <outlet property="playlistNameLabel" destination="im1-sz-xiW" id="tys-I1-ff5"/>
+                                            <outlet property="selectButton" destination="kfd-GF-pyg" id="a8p-3x-ezG"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
