@@ -23,6 +23,13 @@ class searchTableViewCell: UITableViewCell {
     @IBOutlet weak var selectButton: UIButton!
     var playlistItem: Playlist<PlaylistItemsReference>!
 }
+class playlistTrackCell: UITableViewCell {
+    @IBOutlet weak var trackNameLabel: UILabel!
+    @IBOutlet weak var trackAuthorLabel: UILabel!
+    @IBOutlet weak var trackLengthLabel: UILabel!
+    @IBOutlet weak var trackImage: UIImageView!
+    var trackItem: PlaylistItem!
+}
 struct AppleMusicSong {
     var id: String
     var name: String
@@ -54,7 +61,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     //SEARCH PAGE
     var searchBar = UITextField()
     @IBOutlet weak var searchResultsViewController: UITableView!
-    
+    @IBOutlet weak var playlistContentsTableView: UITableView!
     //TRANSFER PAGE
     var playlistTitleLabel = UILabel()
     var playlistImage = UIImageView()
@@ -62,10 +69,11 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var playlistAuthor = UILabel()
     var playlistAuthorImage = UIImageView()
     var playlistTransferButton = UIButton()
-    var playlistContentsTableView = UITableView()
     
     var backButton = UIButton()
     var spotifySearchResults : [Playlist<PlaylistItemsReference>] = []
+    
+    var playlistTracks : [PlaylistItem] = []
     
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
         clientId: "", clientSecret: ""
@@ -112,6 +120,11 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         )
         searchResultsViewController.delegate = self
         searchResultsViewController.dataSource = self
+        
+        playlistContentsTableView.delegate = self
+        playlistContentsTableView.dataSource = self
+        playlistContentsTableView.backgroundColor = .clear
+        
         self.view.bringSubviewToFront(searchResultsViewController)
         //JUST MAKING WEBVIEW VISIBLE
         webView.navigationDelegate = self
@@ -125,6 +138,12 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
 //        searchBar.inputDelegate = self
         searchResultsViewController.rowHeight = 60
         searchResultsViewController.keyboardDismissMode = .onDrag
+        
+        playlistContentsTableView.rowHeight = 43
+        playlistContentsTableView.keyboardDismissMode = .onDrag
+        
+//        playlistContentsTableView.separatorColor = hexStringToUIColor(hex: "#c2c2c2")
+        playlistContentsTableView.separatorColor = .clear
     }
     func getUserToken(completion: @escaping(_ userToken: String) -> Void) -> Void {
         SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
@@ -217,6 +236,11 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         self.playlistAuthorImage.layer.cornerRadius = playlistAuthorImage.frame.width / 2 //creates a circular image
     //        }
         
+//        self.view.addSubview(playlistContentsTableView)
+        playlistContentsTableView.alpha = 0
+        playlistContentsTableView.frame = CGRect(x: 0, y: 310+28+25+45, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - (310+28+25+35))
+        
+        
     }
     func selectRow(tableView: UITableView, position: Int) {
         let sizeTable = tableView.numberOfRows(inSection: 0)
@@ -235,87 +259,167 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
         searchSpotify(query: textField.text ?? "", type: .playlist)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return spotifySearchResults.count
+        if(tableView == searchResultsViewController) {
+            return spotifySearchResults.count
+        } else {
+            return playlistTracks.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
-//        tableView.deselectRow(at: indexPath, animated: true)
-        print(spotifySearchResults[indexPath.row])
-        print("internal uri: \(spotifySearchResults[indexPath.row].uri)")
-        getPlayListItemsFrom(uri: spotifySearchResults[indexPath.row].uri, offset: 0)
-        hideSearchResults()
-        showTransferPage()
-        if(spotifySearchResults.count >= indexPath.row) {
-            playlistTitleLabel.text = spotifySearchResults[indexPath.row].name
-            if(spotifySearchResults[indexPath.row].description != "") {
-                playlistDescription.text = spotifySearchResults[indexPath.row].description
+        if(tableView != playlistContentsTableView) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
+    //        tableView.deselectRow(at: indexPath, animated: true)
+            print(spotifySearchResults[indexPath.row])
+            print("internal uri: \(spotifySearchResults[indexPath.row].uri)")
+            getPlayListItemsFrom(uri: spotifySearchResults[indexPath.row].uri, offset: 0)
+            playlistTracks.removeAll()
+            hideSearchResults()
+            showTransferPage()
+            if(spotifySearchResults.count >= indexPath.row) {
+                playlistTitleLabel.text = spotifySearchResults[indexPath.row].name
+                if(spotifySearchResults[indexPath.row].description != "") {
+                    playlistDescription.text = spotifySearchResults[indexPath.row].description
+                }
+                
+                playlistAuthor.text = spotifySearchResults[indexPath.row].owner?.displayName
+                //ALL THIS IS TO PUT OWNER'S PROFILE PICTURE IN
+                spotify.userProfile(spotifySearchResults[indexPath.row].owner?.uri as! SpotifyURIConvertible).sink(
+                    receiveCompletion: { completion in
+                        
+                    },
+                    receiveValue: { results in
+                        print(results)
+                        DispatchQueue.main.async {
+                            if((results.images!.isNotEmpty)) {
+                                print("* USERS PROFILE PICS: \(results.images)")
+                                self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
+                                self.playlistAuthorImage.fadeIn()
+                                self.playlistAuthorImage.clipsToBounds = true
+                                self.playlistImage.clipsToBounds = true
+                                self.playlistImage.contentMode = .scaleAspectFill
+                            } else {
+                                //playlist doesnt have image -- show placeholder
+                                self.playlistAuthorImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                                self.playlistAuthorImage.fadeIn()
+                                self.playlistAuthorImage.clipsToBounds = true
+                                self.playlistImage.clipsToBounds = true
+                            }
+                        }
+                        
+                    }
+                )
+                .store(in: &self.cancellables)
+                
+                print("*playlist description: \(spotifySearchResults[indexPath.row].description)")
             }
             
-            playlistAuthor.text = spotifySearchResults[indexPath.row].owner?.displayName
-            //ALL THIS IS TO PUT OWNER'S PROFILE PICTURE IN
-            spotify.userProfile(spotifySearchResults[indexPath.row].owner?.uri as! SpotifyURIConvertible).sink(
+            playlistImage.alpha = 0
+            if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
+                playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+                playlistImage.fadeIn()
+            } else {
+                //playlist doesnt have image -- show placeholder
+                playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                playlistImage.fadeIn()
+            }
+        }
+        
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if(tableView == searchResultsViewController) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
+            
+            cell.playlistCoverPhoto.image = nil
+            //SET LABELS AND SUCH
+            if(spotifySearchResults.count > indexPath.row) {
+                cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
+                cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
+                if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
+                    print("playlist images: \(spotifySearchResults[indexPath.row].images)")
+                    cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images.last!.url)
+                    cell.playlistCoverPhoto.contentMode = .scaleAspectFill
+                } else {
+                    //playlist doesnt have image -- show placeholder
+                    cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                    cell.playlistCoverPhoto.contentMode = .scaleAspectFill
+                }
+            }
+            cell.selectButton.tag = indexPath.row
+    //        cell.playlistItem = spotifySearchResults[indexPath.row]
+            cell.selectionStyle = .none
+            
+            return cell
+        } else {
+//            playlistContentsTableView
+            let cell = tableView.dequeueReusableCell(withIdentifier: "trackCell", for: indexPath) as! playlistTrackCell
+//            if(playlistTracks[indexPath.row].art!.isNotEmpty) {
+//                cell.trackAuthorLabel.text = playlistTracks[indexPath.row].artists![0].name
+//            } else {
+//                cell.trackAuthorLabel.text = "[no author]"
+//            }
+            cell.trackAuthorLabel.font = UIFont(name: "HypermarketW00-Regular", size: 12)
+            cell.trackNameLabel.frame = CGRect(x: 20+40, y: 3, width: UIScreen.main.bounds.width-100, height: 18)
+            cell.trackAuthorLabel.frame = CGRect(x: 20+40, y: 21, width: UIScreen.main.bounds.width-100, height: 18)
+            cell.trackLengthLabel.frame = CGRect(x: UIScreen.main.bounds.width-100-15, y: (43/2)-9, width: 90, height: 18)
+            cell.trackNameLabel.font = UIFont(name: "HypermarketW00-Regular", size: 14)
+            cell.trackNameLabel.text = playlistTracks[indexPath.row].name
+            let msInterval : TimeInterval = Double(playlistTracks[indexPath.row].durationMS!/1000)
+            cell.trackLengthLabel.text = msInterval.minuteSecondMS
+            cell.trackImage.clipsToBounds = true
+            cell.trackImage.layer.cornerRadius = 5
+            cell.trackImage.frame = CGRect(x: 20, y: 6.5, width: 32, height: 32)
+            cell.trackLengthLabel.textAlignment = .right
+            cell.backgroundColor = .clear
+            
+            cell.trackLengthLabel.font = UIFont(name: "HypermarketW00-Regular", size: 14)
+            spotify.track(playlistTracks[indexPath.row].uri as! String, market: "us").sink(
                 receiveCompletion: { completion in
                     
                 },
                 receiveValue: { results in
-                    print(results)
+//                    print(results)
                     DispatchQueue.main.async {
-                        if((results.images!.isNotEmpty)) {
-                            print("* USERS PROFILE PICS: \(results.images)")
-                            self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
-                            self.playlistAuthorImage.fadeIn()
-                            self.playlistAuthorImage.clipsToBounds = true
-                            self.playlistImage.clipsToBounds = true
+                        var txt = ""
+                        if(results.album != nil) {
+                            print("playlist images: \(results.album?.images)")
+                            cell.trackImage.downloaded(from: (results.album?.images?[0].url)!)
+                            cell.trackImage.contentMode = .scaleAspectFill
                         } else {
                             //playlist doesnt have image -- show placeholder
-                            self.playlistAuthorImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
-                            self.playlistAuthorImage.fadeIn()
-                            self.playlistAuthorImage.clipsToBounds = true
-                            self.playlistImage.clipsToBounds = true
+                            cell.trackImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                            cell.trackImage.contentMode = .scaleAspectFill
                         }
+                        for i in results.artists! {
+                            if(i != results.artists?.last) {
+                                if(txt == "") {
+                                    txt = "\(i.name),"
+                                } else {
+                                    txt = "\(txt) \(i.name),"
+                                }
+                                
+                            } else {
+                                if(txt == "") {
+                                    txt = i.name
+                                } else {
+                                    txt = "\(txt) \(i.name)"
+                                }
+                                
+                            }
+                            
+                        }
+                        cell.trackAuthorLabel.text = txt
                     }
                     
                 }
             )
             .store(in: &self.cancellables)
-            
-            print("*playlist description: \(spotifySearchResults[indexPath.row].description)")
+            cell.trackItem = playlistTracks[indexPath.row]
+            cell.selectionStyle = .none
+            return cell
         }
         
-        playlistImage.alpha = 0
-        if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
-            playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
-            playlistImage.fadeIn()
-        } else {
-            //playlist doesnt have image -- show placeholder
-            playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
-            playlistImage.fadeIn()
-        }
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
-        
-        cell.playlistCoverPhoto.image = nil
-        //SET LABELS AND SUCH
-        if(spotifySearchResults.count > indexPath.row) {
-            cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
-            cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
-            if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
-                print("playlist images: \(spotifySearchResults[indexPath.row].images)")
-                cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images.last!.url)
-                cell.playlistCoverPhoto.contentMode = .scaleAspectFill
-            } else {
-                //playlist doesnt have image -- show placeholder
-                cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
-                cell.playlistCoverPhoto.contentMode = .scaleAspectFill
-            }
-        }
-        cell.selectButton.tag = indexPath.row
-//        cell.playlistItem = spotifySearchResults[indexPath.row]
-        cell.selectionStyle = .none
-        
-        return cell
     }
     private func playVideo(from file:String) {
         let file = file.components(separatedBy: ".")
@@ -682,13 +786,25 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 for n in 0...results.items.count-1 {
                     //ADD EVERYSONG INTO AN ARRAY
                     songArr.append((results.items[n].item?.uri as! String) as! SpotifyURIConvertible)
+                    
+                    if(results.items[n].item?.type == .track) {
+                        
+                        self.playlistTracks.append(results.items[n].item!)
+                    }
+                    
+                    
                 }
-//                print(results)
-//                results.items
+                print(results.items[0])
                 print("* total amount of songs loaded in playlist: \(songArr.count)")
 //                self.addSongsToPlaylist(playlist: uri as! SpotifyURIConvertible, uris: songArr)
+                
                 if(results.next != nil) {
                     self.getPlayListItemsFrom(uri: uri, offset: (offset ?? 0)+100)
+                } else {
+                    DispatchQueue.main.async {
+                        self.playlistContentsTableView.reloadData()
+                        self.playlistContentsTableView.fadeIn()
+                    }
                 }
 //                print(songArr)
                 //EXAMPLE TO ADD MULTIPLE SONGS TO PLAYLIST
@@ -931,6 +1047,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                 self.searchBar.frame = CGRect(x: 20, y: 80, width: UIScreen.main.bounds.width-40, height: 45)
             }) { _ in
                 self.iTunesImage.removeFromSuperview()
+                self.searchBar.becomeFirstResponder()
 //                self.addLoginPage1Elements()
 //                self.playVideo(from: "Mobile_Web_BG.m4v")
             }
@@ -1003,6 +1120,9 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             self.playlistTitleLabel.fadeOut()
             searchBar.fadeIn()
             searchResultsViewController.fadeIn()
+            playlistContentsTableView.fadeOut()
+            playlistTracks.removeAll()
+            playlistContentsTableView.reloadData()
             currentStep = "search_1"
         }
         
@@ -1213,5 +1333,26 @@ extension UIImageView {
     func downloaded(from link: String, contentMode mode: ContentMode = .scaleAspectFit) {
         guard let url = URL(string: link) else { return }
         downloaded(from: url, contentMode: mode)
+    }
+}
+extension TimeInterval {
+    var hourMinuteSecondMS: String {
+        String(format:"%d:%02d:%02d.%03d", hour, minute, second, millisecond)
+    }
+    var minuteSecondMS: String {
+//        String(format:"%d:%02d.%03d", minute, second, millisecond)
+        String(format:"%d:%02d", minute, second)
+    }
+    var hour: Int {
+        Int((self/3600).truncatingRemainder(dividingBy: 3600))
+    }
+    var minute: Int {
+        Int((self/60).truncatingRemainder(dividingBy: 60))
+    }
+    var second: Int {
+        Int(truncatingRemainder(dividingBy: 60))
+    }
+    var millisecond: Int {
+        Int((self*1000).truncatingRemainder(dividingBy: 1000))
     }
 }
