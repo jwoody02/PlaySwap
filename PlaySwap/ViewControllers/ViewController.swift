@@ -493,10 +493,10 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                             self.playlistAuthorImage.fadeIn()
                             self.appleMusicTracks.removeAll()
                             let tracks = JSON(playlist[0]["relationships"]["tracks"]["data"])
-//                            print("got results: \(tracks[0])")
                             var i = 0
                             for track in tracks {
-                                self.appleMusicTracks.append(AppleMusicSong(id: tracks[i]["id"].string ?? "", name: tracks[i]["attributes"]["name"].string ?? "", artistName: tracks[i]["attributes"]["composerName"].string ?? "", artworkURL: (tracks[i]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "128x128"), length: TimeInterval(Double(tracks[i]["attributes"]["durationInMillis"].int ?? 0))))
+                                //artistName or composerName
+                                self.appleMusicTracks.append(AppleMusicSong(id: tracks[i]["id"].string ?? "", name: tracks[i]["attributes"]["name"].string ?? "", artistName: tracks[i]["attributes"]["artistName"].string ?? "", artworkURL: (tracks[i]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "128x128"), length: TimeInterval(Double(tracks[i]["attributes"]["durationInMillis"].int ?? 0))))
                                 i=i+1
                             }
                             print("found all tracks showing table")
