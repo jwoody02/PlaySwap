@@ -76,6 +76,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var backButton = UIButton()
     var spotifySearchResults : [Playlist<PlaylistItemsReference>] = []
     var appleMusicSearchResults : [AppleMusicSong] = []
+    var transferButton = UIButton()
     
     var playlistTracks : [PlaylistItem] = []
     var appleMusicTracks : [AppleMusicSong] = []
@@ -301,7 +302,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         
 //        self.view.addSubview(playlistContentsTableView)
         playlistContentsTableView.alpha = 0
-        var y = 80+110+20+10+tmp
+        var y = 80+110+20+10+tmp+50
         playlistContentsTableView.frame = CGRect(x: 0, y: CGFloat(y), width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - CGFloat((y)))
     }
     func backupshowTransferPage(){
@@ -411,6 +412,26 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if(tableView != playlistContentsTableView) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
+            transferButton = createButton()
+            transferButton.alpha = 0
+            transferButton.addTarget(self, action: #selector(transferPressed(_:)), for: .touchUpInside)
+            
+            if(transferringFrom == "spotify") {
+                transferButton.setTitle("transfer to apple music", for: .normal)
+            }
+            else {
+                transferButton.setTitle("transfer to spotify", for: .normal)
+            }
+            transferButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+            transferButton.layer.borderColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
+            transferButton.layer.borderWidth = 1
+    //        continueButton.alpha = 1
+            transferButton.layer.cornerRadius = 5
+            transferButton.frame = CGRect(x: 20, y: 220, width: UIScreen.main.bounds.width - 40, height: 50)
+            transferButton.fadeIn()
+            transferButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+            transferButton.setTitleColor(hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+            transferButton.dropShadow()
     //        tableView.deselectRow(at: indexPath, animated: true)
             if(transferringFrom == "spotify") {
                 print(spotifySearchResults[indexPath.row])
@@ -539,6 +560,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
 //                print("apple music row!")
                 if(appleMusicSearchResults.count > indexPath.row) {
                     cell.playlistNameLabel.text = appleMusicSearchResults[indexPath.row].name as! String
+                    //fix this shit later
                     cell.playlistCreaterLabel.text = (appleMusicSearchResults[indexPath.row].artistName ?? "") as! String
                     cell.appleMusicPlaylistID = appleMusicSearchResults[indexPath.row].id
                     print("apple music playlistid: \(appleMusicSearchResults[indexPath.row].id)")
@@ -547,7 +569,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                         cell.playlistCoverPhoto.downloaded(from: appleMusicSearchResults[indexPath.row].artworkURL.replacingOccurrences(of: "{w}x{h}", with: "128x128"))
                         cell.playlistCoverPhoto.contentMode = .scaleAspectFill
                     } else {
-                        //playlist doesnt have image -- show placeholder
+                        //playlist doesƒnt have image -- show placeholder
                         cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
                         cell.playlistCoverPhoto.contentMode = .scaleAspectFill
                     }
@@ -1051,7 +1073,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     func addSongToQueue(query: String) {
         //For query do {Song name} SPACE {artist}
 //        songQueue
-        self.spotify_anonymous.search(query: query, categories: [.track])
+        self.spotify.search(query: query, categories: [.track])
             .sink(
                 receiveCompletion: { completion in
 //                    return completion
@@ -1063,9 +1085,14 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 receiveValue: { results in
 //                    print(results.tracks?.items[0])
                     //RETURN THE FIRST SEARCH RESULT WHICH IS PROBABLY THE CLOSEST
-                    let bestResult = results.tracks!.items[0]
-                    //ADD SONG TO SONG QUEUE TO BE USED TO SAVE TO PLAYLIST
-                    self.songQueue.append((bestResult.uri as! String) as! SpotifyURIConvertible)
+                    if(results.tracks!.items.isNotEmpty) {
+                        let bestResult = results.tracks!.items[0]
+                        //ADD SONG TO SONG QUEUE TO BE USED TO SAVE TO PLAYLIST
+                        self.songQueue.append((bestResult.uri as! String) as! SpotifyURIConvertible)
+                    } else {
+                        //some shit not added
+                    }
+                    
                 }
             ).store(in: &self.cancellables)
     }
@@ -1374,6 +1401,73 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         }
         
     }
+    @objc func transferPressed(_ sender: UIButton) {
+        print ("transfer button pressed")
+        if(transferringFrom == "spotify") {
+            
+        }
+        else {
+            DispatchQueue.main.async {
+                self.songQueue.removeAll()
+                var i = 0
+                for song in self.appleMusicTracks {
+    //                songQueue.append(song.uri as! SpotifyURIConvertible)
+                    if(i != self.appleMusicTracks.count-1) {
+                        self.addSongToQueue(query: "\(song.name)")
+                    } else {
+                        self.spotify.currentUserProfile().sink(
+                            receiveCompletion: { completion in
+                                if case .failure(let error) = completion {
+                                                    print("COULD NOT GET USER PROFILE PROPERLY")
+                                                }
+                            },
+                            receiveValue: { results in
+                                //use results.href to get API endpoint for this user
+                                print(results)
+                                let user = results.uri as! SpotifyURIConvertible
+                                print("current user profile url: \(user.uri)")
+                //                let uri: SpotifyURIConvertible
+                //                uri.uri = results.uri
+                                DispatchQueue.main.async {
+                                self.spotify.createPlaylist(for: user, PlaylistDetails(name: self.playlistTitleLabel.text ?? "", isPublic: true, isCollaborative: false, description: self.playlistDescription.text ?? "")).sink(
+                                    receiveCompletion: { completion2 in
+                        //                    return completion
+                                        print("completion result: \(completion2)")
+                                        if case .failure(let error) = completion2 {
+                                                            print("COULD NOT CREATE NEW PLAYLIST")
+                                                        }
+                                    },
+                                    receiveValue: { results2 in
+                                        print("* successfully created playlist!")
+                                        let playlistURI = results2.uri as! SpotifyURIConvertible
+                                        print("* playlist internal url: \(playlistURI)")
+                                        //Here I add 90210 by travis scott to playlist as an example:
+                //                        self.addSongToPlaylist(playlistURI: playlistURI, songURI: "spotify:track:51EC3I1nQXpec4gDk0mQyP" as! SpotifyURIConvertible)
+                                        //here is an example of multiple at once (should add 90210, zeze, shoota, etc)
+                                        self.addSongsToPlaylist(playlist: playlistURI, uris: self.songQueue)
+                                        if((self.playlistImage.image?.jpegData(compressionQuality: 0.3)) != nil) {
+                                            
+                                            self.spotify.uploadPlaylistImage(playlistURI, imageData: (self.playlistImage.image?.jpegData(compressionQuality: 0.3))!)
+                                        }
+                                        
+                                    }
+                                )
+                                .store(in: &self.cancellables)
+                                }
+                                
+                            }
+                        )
+                        .store(in: &self.cancellables)
+                    }
+                    i = i+1
+                    
+                }
+                
+            }
+            
+        }
+    }
+    
     @objc func loginPressed(_ sender: UIButton) {
         print("login pressed")
     }
