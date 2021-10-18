@@ -387,6 +387,11 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 searchSpotify(query: textField.text ?? "", type: .playlist)
             } else {
                 searchAppleMusic(searchTerm: textField.text ?? "")
+                //ADDING URI to APPLE MUSIC SEARCH
+//                let str = textField.text ?? ""
+//                let components = str.components(separatedBy: "/")
+//                appleMusicSearchResults[Int(components[5])].id
+                
             }
         }
     }
