@@ -1413,7 +1413,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 for song in self.appleMusicTracks {
     //                songQueue.append(song.uri as! SpotifyURIConvertible)
                     if(i != self.appleMusicTracks.count-1) {
-                        self.addSongToQueue(query: "\(song.name)")
+                        self.addSongToQueue(query: "\(song.name) \(song.artistName)")
                     } else {
                         self.spotify.currentUserProfile().sink(
                             receiveCompletion: { completion in
@@ -1445,10 +1445,12 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 //                        self.addSongToPlaylist(playlistURI: playlistURI, songURI: "spotify:track:51EC3I1nQXpec4gDk0mQyP" as! SpotifyURIConvertible)
                                         //here is an example of multiple at once (should add 90210, zeze, shoota, etc)
                                         self.addSongsToPlaylist(playlist: playlistURI, uris: self.songQueue)
-                                        if((self.playlistImage.image?.jpegData(compressionQuality: 0.3)) != nil) {
-                                            
-                                            self.spotify.uploadPlaylistImage(playlistURI, imageData: (self.playlistImage.image?.jpegData(compressionQuality: 0.3))!)
-                                        }
+//                                        DispatchQueue.main.async {
+//                                        if((self.playlistImage.image?.jpegData(compressionQuality: 0.3)) != nil) {
+//                                            
+//                                            self.spotify.uploadPlaylistImage(playlistURI, imageData: (self.playlistImage.image?.jpegData(compressionQuality: 0.3))!)
+//                                        }
+//                                        }
                                         
                                     }
                                 )
