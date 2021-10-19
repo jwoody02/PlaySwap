@@ -386,11 +386,73 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             if(transferringFrom == "spotify") {
                 searchSpotify(query: textField.text ?? "", type: .playlist)
             } else {
-                searchAppleMusic(searchTerm: textField.text ?? "")
+                let str = textField.text ?? ""
+                if(str.contains("music.apple") && str.contains("playlist")){
+                    let components = str.components(separatedBy: "/")
+                    var AppleURI = components.last
+                    getAppleMusicplaylistInfo(id: AppleURI ?? "") { playlist in
+                        DispatchQueue.main.async{
+                            self.hideSearchResults()
+                            self.showTransferPage()
+                            self.playlistTitleLabel.text = playlist[0]["attributes"]["name"].string
+                            self.playlistAuthor.text = playlist[0]["attributes"]["curatorName"].string
+                            self.playlistImage.downloaded(from: String((playlist[0]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "400x400")))
+                            self.playlistTitleLabel.fadeIn()
+                            print(playlist[0]["attributes"]["artwork"]["url"])
+                            self.playlistDescription.text = playlist[0]["attributes"]["description"]["short"].string
+                            self.playlistAuthorImage.clipsToBounds = true
+                            self.playlistCoverPhoto = String((playlist[0]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "400x400"))
+                            self.playlistImage.clipsToBounds = true
+                            self.playlistImage.layer.cornerRadius = 5
+                            
+                            self.playlistAuthorImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                            self.playlistAuthorImage.fadeIn()
+                            self.appleMusicTracks.removeAll()
+                            let tracks = JSON(playlist[0]["relationships"]["tracks"]["data"])
+                            var i = 0
+                            for track in tracks {
+                                //artistName or composerName
+                                self.appleMusicTracks.append(AppleMusicSong(id: tracks[i]["id"].string ?? "", name: tracks[i]["attributes"]["name"].string ?? "", artistName: tracks[i]["attributes"]["artistName"].string ?? "", artworkURL: (tracks[i]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "128x128"), length: TimeInterval(Double(tracks[i]["attributes"]["durationInMillis"].int ?? 0))))
+                                i=i+1
+                            }
+                            print("found all tracks showing table")
+                            self.playlistContentsTableView.reloadData()
+                            self.playlistContentsTableView.fadeIn()
+                            self.transferButton = self.createButton()
+                            
+                            self.transferButton.alpha = 0
+                            self.transferButton.addTarget(self, action: #selector(self.transferPressed(_:)), for: .touchUpInside)
+                            
+                            self.transferButton.isUserInteractionEnabled = true
+                            self.transferButton.fadeIn()
+                //            self.transferButton.isUserInteractionEnabled = false
+                            if(self.transferringFrom == "spotify") {
+                                self.transferButton.setTitle("transfer to apple music", for: .normal)
+                            }
+                            else {
+                                self.transferButton.setTitle("transfer to spotify", for: .normal)
+                            }
+                            self.transferButton.backgroundColor = .white
+                            self.transferButton.layer.borderColor = self.hexStringToUIColor(hex: "#c2c2c2").cgColor
+                            self.transferButton.layer.borderWidth = 1
+                    //        continueButton.alpha = 1
+                            self.transferButton.layer.cornerRadius = 5
+                            self.transferButton.frame = CGRect(x: 20, y: 220, width: UIScreen.main.bounds.width - 40, height: 50)
+                            
+                            self.transferButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+                            self.transferButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+                            self.transferButton.dropShadow()
+                        }
+                    }
+                }
+                else{
+                    searchAppleMusic(searchTerm: str)
+                }
+                
                 //ADDING URI to APPLE MUSIC SEARCH
-                // let str = textField.text ?? ""
-                // let components = str.components(separatedBy: "/")
-                // appleMusicSearchResults[Int(components[5])].id
+                 
+                 
+                 
             }
         }
     }
