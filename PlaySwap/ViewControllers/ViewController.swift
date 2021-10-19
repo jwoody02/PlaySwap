@@ -107,7 +107,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var appleMusicAuthToken = ""
     var appleMusicStoreFrontID = ""
     
-    
+    var playlistCoverPhoto = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         //Here I just make a massive fucking itunes png in the middle of the screen
@@ -417,17 +417,20 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         if(tableView != playlistContentsTableView) {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! searchTableViewCell
             transferButton = createButton()
+            
             transferButton.alpha = 0
             transferButton.addTarget(self, action: #selector(transferPressed(_:)), for: .touchUpInside)
-            self.transferButton.fadeIn()
+            
             self.transferButton.isUserInteractionEnabled = true
+            self.transferButton.fadeIn()
+//            self.transferButton.isUserInteractionEnabled = false
             if(transferringFrom == "spotify") {
                 transferButton.setTitle("transfer to apple music", for: .normal)
             }
             else {
                 transferButton.setTitle("transfer to spotify", for: .normal)
             }
-            transferButton.backgroundColor = hexStringToUIColor(hex: "#f0f3f4")
+            transferButton.backgroundColor = .white
             transferButton.layer.borderColor = hexStringToUIColor(hex: "#c2c2c2").cgColor
             transferButton.layer.borderWidth = 1
     //        continueButton.alpha = 1
@@ -488,6 +491,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 if(spotifySearchResults.count-1 >= indexPath.row) {
                     if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
                         playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
+                        playlistCoverPhoto = spotifySearchResults[indexPath.row].images[0].url.absoluteString as! String
                         playlistImage.fadeIn()
                     } else {
                         //playlist doesnt have image -- show placeholder
@@ -512,7 +516,8 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                             self.playlistDescription.text = playlist[0]["attributes"]["description"]["short"].string
                             self.playlistAuthorImage.clipsToBounds = true
                             
-                            self.playlistImage.downloaded(from: String((playlist[0]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "512x512")))
+                            self.playlistImage.downloaded(from: String((playlist[0]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "400x400")))
+                            self.playlistCoverPhoto = String((playlist[0]["attributes"]["artwork"]["url"].string ?? "").replacingOccurrences(of: "{w}x{h}", with: "400x400"))
                             self.playlistImage.clipsToBounds = true
                             self.playlistImage.layer.cornerRadius = 5
                             
@@ -603,7 +608,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 cell.trackImage.frame = CGRect(x: 20, y: 6.5, width: 32, height: 32)
                 cell.trackLengthLabel.textAlignment = .right
                 cell.backgroundColor = .clear
-                
+                cell.selectionStyle = .none
                 cell.trackLengthLabel.font = UIFont(name: "HypermarketW00-Regular", size: 14)
                 spotify_anonymous.track(playlistTracks[indexPath.row].uri as! String, market: "us").sink(
                     receiveCompletion: { completion in
@@ -668,7 +673,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 cell.backgroundColor = .clear
                 
                 cell.trackLengthLabel.font = UIFont(name: "HypermarketW00-Regular", size: 14)
-                print("*track name: \(appleMusicTracks)")
+//                print("*track name: \(appleMusicTracks)")
                 cell.trackLengthLabel.text = msInterval.minuteSecondMS
                 cell.trackNameLabel.text = appleMusicTracks[indexPath.row].name
                 cell.trackAuthorLabel.text = appleMusicTracks[indexPath.row].artistName
@@ -681,6 +686,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     cell.trackImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
                     cell.trackImage.contentMode = .scaleAspectFill
                 }
+                cell.selectionStyle = .none
                 return cell
             }
         }
@@ -955,7 +961,8 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     .userReadPlaybackPosition,
                     .userFollowModify,
                     .playlistReadPrivate,
-                    .playlistModifyPublic
+                    .playlistModifyPublic,
+                    .ugcImageUpload
                         
                 ]
             )!
@@ -1096,7 +1103,14 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                         //ADD SONG TO SONG QUEUE TO BE USED TO SAVE TO PLAYLIST
                         self.songQueue.append((bestResult.uri as! String) as! SpotifyURIConvertible)
                         DispatchQueue.main.async {
-                            self.transferButton.setTitle("transferring from \(self.transferringFrom) (\(self.songQueue.count-1)/\(outOf))", for: .normal)
+                            if let buttonTitle = self.transferButton.title(for: .normal) {
+                                if(buttonTitle.contains("finish")) {
+                                    
+                                } else {
+                                    self.transferButton.setTitle("transferring from \(self.transferringFrom) (\(self.songQueue.count-1)/\(outOf))", for: .normal)
+                                }
+                              }
+                            
                         }
                         
                     } else {
@@ -1220,6 +1234,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     } else {
                         
                         DispatchQueue.main.async {
+                            self.backButton.isUserInteractionEnabled = true
                             self.transferButton.setTitle("finished transferring to spotify!", for: .normal)
 //                            self.transferButton.setTitle("finished transferring to spotify", for: .normal)
                             let alert = NewYorkAlertController(title: "Transfer Successful", message: "'\(self.playlistTitleLabel.text!)' finished transferring \(self.songQueue.count-1) songs", style: .alert)
@@ -1441,7 +1456,9 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     }
     @objc func transferPressed(_ sender: UIButton) {
         print ("transfer button pressed")
+        self.transferButton.setTitle("starting transfer...", for: .normal)
         transferButton.isUserInteractionEnabled = false
+        self.backButton.isUserInteractionEnabled = false
         if(transferringFrom == "spotify") {
             
         }
@@ -1504,12 +1521,32 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                                         print("* playlist external url: \(results2.externalURLs!["spotify"])")
                                                         self.addSongsToPlaylist(playlist: playlistURI, uris: self.songQueue, spotifypublicUrl: results2.externalURLs!["spotify"]!.absoluteString as! String)
 //                                                        print(results2)
-                //                                        DispatchQueue.main.async {
-                //                                        if((self.playlistImage.image?.jpegData(compressionQuality: 0.3)) != nil) {
-                //
-                //                                            self.spotify.uploadPlaylistImage(playlistURI, imageData: (self.playlistImage.image?.jpegData(compressionQuality: 0.3))!)
-                //                                        }
-                //                                        }
+//                                                        DispatchQueue.main.async {
+//                                                            self.getData(from: URL(string: self.playlistCoverPhoto)!) { data, response, error in
+//                                                                    guard let data = data, error == nil else { return }
+//                                                                    print("Download Finished")
+//                                                                    // always update the UI from the main thread
+//                                                                    DispatchQueue.main.async() {
+//                                                                        self.spotify.uploadPlaylistImage(playlistURI, imageData: Data(referencing: (self.playlistImage.image?.pngData()!) as! NSData) as! Data).sink(
+//                                                                            receiveCompletion: { completion4 in
+//                                                                //                    return completion
+//                                                                                print("completion result: \(completion4)")
+//                                                                                if case .failure(let error) = completion4 {
+//                                                                                                    print("COULD NOT UPLOAD PLAYLIST COVER")
+//                                                                                    print(error)
+//                                                                                                }
+//                                                                            },
+//                                                                            receiveValue: { result3 in
+//                                                                                print("* successfully added playlist art")
+//                                                                                print(result3)
+//
+//                                                                            }
+//                                                                        )
+//                                                                            .store(in: &self.cancellables)
+//                                                                    }
+//                                                                }
+//
+//                                                        }
                                                         
                                                     }
                                                 )
@@ -1535,7 +1572,9 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             
         }
     }
-    
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+    }
     @objc func loginPressed(_ sender: UIButton) {
         print("login pressed")
     }

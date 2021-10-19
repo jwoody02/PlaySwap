@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		171B8BAA2716396900DB0AA3 /* AppleMusicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171B8BA92716396900DB0AA3 /* AppleMusicAPI.swift */; };
+		171B8BAC271639B400DB0AA3 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171B8BAB271639B400DB0AA3 /* SwiftyJSON.swift */; };
 		173317BB270BEB88007523D7 /* Spotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173317BA270BEB88007523D7 /* Spotify.swift */; };
 		1756F18E270BC63C00529C0D /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 1756F18D270BC63C00529C0D /* SpotifyAPI */; };
 		177D74CB270E3C8E00A21652 /* Mobile_Web_BG.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 177D74CA270E3B0A00A21652 /* Mobile_Web_BG.m4v */; };
@@ -19,12 +21,13 @@
 		17A2FBCB270BA2BF00EBB392 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBCA270BA2BF00EBB392 /* Assets.xcassets */; };
 		17A2FBCE270BA2BF00EBB392 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBCC270BA2BF00EBB392 /* LaunchScreen.storyboard */; };
 		17A2FBD7270BA5F200EBB392 /* itunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 17A2FBD6270BA5F200EBB392 /* itunes.png */; };
-		854EE3042718AC3500A97CF8 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854EE3032718AC3500A97CF8 /* SwiftyJSON.swift */; };
-		854EE3062718AC4300A97CF8 /* AppleMusicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 854EE3052718AC4300A97CF8 /* AppleMusicAPI.swift */; };
 		DD59230198B507BDB20F7602 /* Pods_PlaySwap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB10065EF5BC01412FE25C9 /* Pods_PlaySwap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		171B8BA92716396900DB0AA3 /* AppleMusicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicAPI.swift; sourceTree = "<group>"; };
+		171B8BAB271639B400DB0AA3 /* SwiftyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		1721427327172EF5001AEFD3 /* PlaySwap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PlaySwap.entitlements; sourceTree = "<group>"; };
 		173317BA270BEB88007523D7 /* Spotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spotify.swift; sourceTree = "<group>"; };
 		177D74CA270E3B0A00A21652 /* Mobile_Web_BG.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mobile_Web_BG.m4v; sourceTree = "<group>"; };
 		177D74CD270E63DE00A21652 /* Hypermarket W00 Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hypermarket W00 Regular.ttf"; sourceTree = "<group>"; };
@@ -40,8 +43,6 @@
 		17A2FBD6270BA5F200EBB392 /* itunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itunes.png; sourceTree = "<group>"; };
 		5FB10065EF5BC01412FE25C9 /* Pods_PlaySwap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PlaySwap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71D249A4AB4466BC0704AD1D /* Pods-PlaySwap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlaySwap.debug.xcconfig"; path = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.debug.xcconfig"; sourceTree = "<group>"; };
-		854EE3032718AC3500A97CF8 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
-		854EE3052718AC4300A97CF8 /* AppleMusicAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleMusicAPI.swift; sourceTree = "<group>"; };
 		C7C2D12D98C7B7938B84FAC5 /* Pods-PlaySwap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlaySwap.release.xcconfig"; path = "Target Support Files/Pods-PlaySwap/Pods-PlaySwap.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,8 +63,8 @@
 			isa = PBXGroup;
 			children = (
 				173317BA270BEB88007523D7 /* Spotify.swift */,
-				854EE3032718AC3500A97CF8 /* SwiftyJSON.swift */,
-				854EE3052718AC4300A97CF8 /* AppleMusicAPI.swift */,
+				171B8BA92716396900DB0AA3 /* AppleMusicAPI.swift */,
+				171B8BAB271639B400DB0AA3 /* SwiftyJSON.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -116,6 +117,7 @@
 		17A2FBC0270BA2BD00EBB392 /* PlaySwap */ = {
 			isa = PBXGroup;
 			children = (
+				1721427327172EF5001AEFD3 /* PlaySwap.entitlements */,
 				177D74C9270E3AEA00A21652 /* UI */,
 				173317B9270BEB7E007523D7 /* Extensions */,
 				1756EE5C270BBE8700529C0D /* ViewControllers */,
@@ -279,11 +281,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				171B8BAA2716396900DB0AA3 /* AppleMusicAPI.swift in Sources */,
 				17A2FBC6270BA2BD00EBB392 /* ViewController.swift in Sources */,
-				854EE3062718AC4300A97CF8 /* AppleMusicAPI.swift in Sources */,
 				17A2FBC2270BA2BD00EBB392 /* AppDelegate.swift in Sources */,
+				171B8BAC271639B400DB0AA3 /* SwiftyJSON.swift in Sources */,
 				173317BB270BEB88007523D7 /* Spotify.swift in Sources */,
-				854EE3042718AC3500A97CF8 /* SwiftyJSON.swift in Sources */,
 				17A2FBC4270BA2BD00EBB392 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -416,7 +418,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -432,9 +434,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PlaySwap/PlaySwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = N8TNX3HXH8;
+				DEVELOPMENT_TEAM = 4SSQ3NUFVX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PlaySwap/Info.plist;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "In order to transfer playlist(s) to apple music we need temporary access to the service";
@@ -444,13 +448,12 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.compscihotties.ps.PlaySwap44444;
+				PRODUCT_BUNDLE_IDENTIFIER = com.compscihotties.ps.PlaySwap456345;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -464,9 +467,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PlaySwap/PlaySwap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = N8TNX3HXH8;
+				DEVELOPMENT_TEAM = 4SSQ3NUFVX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PlaySwap/Info.plist;
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "In order to transfer playlist(s) to apple music we need temporary access to the service";
@@ -476,13 +481,12 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.compscihotties.ps.PlaySwap44444;
+				PRODUCT_BUNDLE_IDENTIFIER = com.compscihotties.ps.PlaySwap456345;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
