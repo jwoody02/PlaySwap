@@ -172,14 +172,22 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
             guard error == nil else {
                 print("error: \(error)")
                 DispatchQueue.main.async {
-                    let alert = NewYorkAlertController(title: "Error", message: "it appears you do not have an active apple music subscription", style: .alert)
+                    let alert = NewYorkAlertController(title: "Error", message: "you do not have an active apple music subscription", style: .alert)
                     
                     let cancel = NewYorkButton(title: "ok", style: .cancel)
                     
                     alert.addButton(cancel)
-
+                    self.iTunesImage.removeFromSuperview()
+                    self.chooseService.removeFromSuperview()
+                    self.spotifyImage.removeFromSuperview()
+                    self.iTunesButton.removeFromSuperview()
+                    self.spotifyButton.removeFromSuperview()
+                    self.continueButton.removeFromSuperview()
+                    self.backButton.fadeOut()
+                    self.currentStep = "choose_service"
                     self.present(alert, animated: true)
-                    self.addLoginPage1Elements()
+//                    self.addLoginPage1Elements()
+//                    self.playVideo(from: "Mobile_Web_BG.m4v")
                 }
                 
                            return
@@ -1040,7 +1048,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     func searchAppleMusic(searchTerm: String) {
         //you can change this to different countries
         let tmpStoreFront = "us"
-            print("https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")
+//            print("https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")
             let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")!
     //        print("requesting url: \(musicURL)")
                     var musicRequest = URLRequest(url: musicURL)
@@ -1666,6 +1674,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 
                 self.searchResultsViewController.alpha = 1
                 self.spotifySearchResults.removeAll()
+                self.appleMusicSearchResults.removeAll()
                 self.searchResultsViewController.reloadData()
                 self.backButton.fadeOut()
                 self.searchBar.text = ""
