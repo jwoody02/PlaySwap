@@ -393,6 +393,108 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         if(textField.text != "") {
             if(transferringFrom == "spotify") {
                 searchSpotify(query: textField.text ?? "", type: .playlist)
+                let str = textField.text ?? ""
+                if(str.contains("open.spotify") && str.contains("playlist")){
+//        https://open.spotify.com/playlist/2Q92TIbw4mPpumNFnF8cCE?si=9Z3ao0hdRBir_08C3wOUbw
+                    let componentspenis = str.components(separatedBy: "/")
+                    let question = (componentspenis.last ?? "").components(separatedBy: "?")
+                    let SpotifyURI = "spotify:playlist:" + (question.first ?? "")
+                    
+                    getPlayListItemsFrom(uri: SpotifyURI ?? "", offset: 0)
+                    print("white girls")
+                DispatchQueue.main.async{
+                    self.transferButton = self.createButton()
+                    
+                    self.transferButton.alpha = 0
+                    self.transferButton.addTarget(self, action: #selector(self.transferPressed(_:)), for: .touchUpInside)
+                    
+                    self.transferButton.isUserInteractionEnabled = true
+                    self.transferButton.fadeIn()
+        //            self.transferButton.isUserInteractionEnabled = false
+                    if(self.transferringFrom == "spotify") {
+                        self.transferButton.setTitle("transfer to apple music", for: .normal)
+                    }
+                    else {
+                        self.transferButton.setTitle("transfer to spotify", for: .normal)
+                    }
+                    self.transferButton.backgroundColor = .white
+                    self.transferButton.layer.borderColor = self.hexStringToUIColor(hex: "#c2c2c2").cgColor
+                    self.transferButton.layer.borderWidth = 1
+            //        continueButton.alpha = 1
+                    self.transferButton.layer.cornerRadius = 5
+                    self.transferButton.frame = CGRect(x: 20, y: 220, width: UIScreen.main.bounds.width - 40, height: 50)
+                    
+                    self.transferButton.titleLabel?.font = UIFont(name: "HypermarketW00-Regular", size: 16)
+                    self.transferButton.setTitleColor(self.hexStringToUIColor(hex: "#c2c2c2"), for: .normal)
+                    self.transferButton.dropShadow()
+                }
+                    spotify_anonymous.playlist(SpotifyURI, market: "us").sink(
+                        receiveCompletion: { completion in
+                            
+                        },
+                        receiveValue: { results in
+                            DispatchQueue.main.async {
+                                self.playlistTracks.removeAll()
+                                self.hideSearchResults()
+                                self.showTransferPage()
+                                self.playlistTitleLabel.text = results.name
+                                    if(results.description != "") {
+                                        self.playlistDescription.text = results.description
+                                    }
+                                    
+                                self.playlistAuthor.text = results.owner?.displayName
+                                    //ALL THIS IS TO PUT OWNER'S PROFILE PICTURE IN
+                                self.spotify_anonymous.userProfile(results.owner?.uri as! SpotifyURIConvertible).sink(
+                                        receiveCompletion: { completion in
+                                            
+                                        },
+                                        receiveValue: { results in
+                                            print(results)
+                                            DispatchQueue.main.async {
+                                                
+                                                if((results.images!.isNotEmpty)) {
+                                                    print("* USERS PROFILE PICS: \(results.images)")
+                                                    self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
+                                                    self.playlistAuthorImage.fadeIn()
+                                                    self.playlistAuthorImage.clipsToBounds = true
+                                                    self.playlistImage.clipsToBounds = true
+                                                    self.playlistImage.contentMode = .scaleAspectFill
+                                                } else {
+                                                    //playlist doesnt have image -- show placeholder
+                                                    self.playlistAuthorImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                                                    self.playlistAuthorImage.fadeIn()
+                                                    self.playlistAuthorImage.clipsToBounds = true
+                                                    self.playlistImage.clipsToBounds = true
+                                                }
+                                            }
+                                            
+                                        }
+                                    )
+                                    .store(in: &self.cancellables)
+                                    
+    //                                print("*playlist description: \(spotifySearchResults[1].description)")
+                                
+                                
+                                self.playlistImage.alpha = 0
+    //                            if(spotifySearchResults.count-1 >= 0) {
+                                    if(results.images.isNotEmpty) {
+                                        self.playlistImage.downloaded(from: results.images[0].url)
+                                        self.playlistCoverPhoto = results.images[0].url.absoluteString as! String
+                                        self.playlistImage.fadeIn()
+                                    } else {
+                                        //playlist doesnt have image -- show placeholder
+                                        self.playlistImage.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                                        self.playlistImage.fadeIn()
+                                    }
+                            }
+                            
+//                            }
+                            
+                        }
+                    )
+                    .store(in: &self.cancellables)
+                    
+                }
             } else {
                 let str = textField.text ?? ""
                 if(str.contains("music.apple") && str.contains("playlist")){
