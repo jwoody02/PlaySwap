@@ -1315,7 +1315,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         //you can change this to different countries
         let tmpStoreFront = "us"
         //            print("https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")
-        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")!
+        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") )&types=playlists&limit=15")!
         //        print("requesting url: \(musicURL)")
         var musicRequest = URLRequest(url: musicURL)
         musicRequest.httpMethod = "GET"
@@ -1375,7 +1375,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                 let uri = bestResult.uri
                                 print("******************************************************")
                                 print("BEST SEARCH RESULT (PLAYLIST): \(bestResult.name) by \(bestResult.owner!.displayName ?? "")")
-                                print("API ENDPOINT \(bestResult.items.href)")
+                                print("API ENDPOINT \(String(describing: bestResult.items.href))")
                                 if(bestResult.images.isEmpty) {
 //                                    bestResult.images.append(SpotifyImage(height: 210, width: 221, url: URL(string: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")!))
                                 } else {
@@ -1406,7 +1406,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                             print("******************************************************")
                             print("BEST SEARCH RESULT (TRACK): \(bestResult.name) by \(bestResult.artists![0].name)")
                             print("Cover photo: \(bestResult.album?.images![0].url.absoluteString as! String)")
-                            print("song uri: \(bestResult.uri)")
+                            print("song uri: \(String(describing: bestResult.uri))")
                             print("******************************************************")
                         }
                         
@@ -1457,7 +1457,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             ).store(in: &self.cancellables)
     }
     func getPlayListItemsFrom(uri: String, offset: Int?) {
-        self.spotify_anonymous.playlistItems(uri as! SpotifyURIConvertible, limit: 100, offset: offset ?? 0).sink(
+        self.spotify_anonymous.playlistItems(uri as SpotifyURIConvertible, limit: 100, offset: offset ?? 0).sink(
             receiveCompletion: { completion in
 //                    return completion
                 print("completion result: \(completion)")
@@ -1473,7 +1473,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
 //                print()
                 for n in 0...results.items.count-1 {
                     //ADD EVERYSONG INTO AN ARRAY
-                    songArr.append((results.items[n].item?.uri as! String) as! SpotifyURIConvertible)
+                    songArr.append((results.items[n].item?.uri as! String) as SpotifyURIConvertible)
                     
                     if(results.items[n].item?.type == .track) {
                         
@@ -1513,7 +1513,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             receiveValue: { results in
                 //use results.href to get API endpoint for this user
                 print(results)
-                let user = results.uri as! SpotifyURIConvertible
+                let user = results.uri as SpotifyURIConvertible
                 print("current user profile url: \(user.uri)")
 //                let uri: SpotifyURIConvertible
 //                uri.uri = results.uri
@@ -1527,7 +1527,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     },
                     receiveValue: { results2 in
                         print("* successfully created playlist!")
-                        let playlistURI = results2.uri as! SpotifyURIConvertible
+                        let playlistURI = results2.uri as SpotifyURIConvertible
                         print("* playlist internal url: \(playlistURI)")
                         //Here I add 90210 by travis scott to playlist as an example:
 //                        self.addSongToPlaylist(playlistURI: playlistURI, songURI: "spotify:track:51EC3I1nQXpec4gDk0mQyP" as! SpotifyURIConvertible)
@@ -1673,7 +1673,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     }
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         //        calculatingIndicatorView.stopAnimating()
-        print("* webview loaded from url: \(webView.url?.absoluteString as! String)")
+        print("* webview loaded from url: \(String(describing: webView.url?.absoluteString) )")
         if((webView.url?.absoluteString as! String).contains("spotify")) {
 //            webView.fadeIn()
             webView.alpha = 1
@@ -1829,7 +1829,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                     if(results.tracks!.items.isNotEmpty) {
                                         let bestResult = results.tracks!.items[0]
                                         //ADD SONG TO SONG QUEUE TO BE USED TO SAVE TO PLAYLIST
-                                        self.songQueue.append((bestResult.uri as! String) as! SpotifyURIConvertible)
+                                        self.songQueue.append((bestResult.uri!) as SpotifyURIConvertible)
                                         DispatchQueue.main.async {
                                             self.transferButton.setTitle("finishing transfer...", for: .normal)
                                         }
@@ -1842,7 +1842,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                             receiveValue: { results in
                                                 //use results.href to get API endpoint for this user
                                                 print(results)
-                                                let user = results.uri as! SpotifyURIConvertible
+                                                let user = results.uri as SpotifyURIConvertible
                                                 print("current user profile url: \(user.uri)")
                                 //                let uri: SpotifyURIConvertible
                                 //                uri.uri = results.uri
@@ -1857,10 +1857,10 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                                     },
                                                     receiveValue: { results2 in
                                                         print("* successfully created playlist!")
-                                                        let playlistURI = results2.uri as! SpotifyURIConvertible
+                                                        let playlistURI = results2.uri as SpotifyURIConvertible
                                                         print("* playlist internal url: \(playlistURI)")
-                                                        print("* playlist external url: \(results2.externalURLs!["spotify"])")
-                                                        self.addSongsToPlaylist(playlist: playlistURI, uris: self.songQueue, spotifypublicUrl: results2.externalURLs!["spotify"]!.absoluteString as! String)
+                                                        print("* playlist external url: \(String(describing: results2.externalURLs!["spotify"]))")
+                                                        self.addSongsToPlaylist(playlist: playlistURI, uris: self.songQueue, spotifypublicUrl: results2.externalURLs!["spotify"]!.absoluteString )
 //                                                        print(results2)
 //                                                        DispatchQueue.main.async {
 //                                                            self.getData(from: URL(string: self.playlistCoverPhoto)!) { data, response, error in
