@@ -172,7 +172,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     func getUserToken(completion: @escaping(_ userToken: String) -> Void) -> Void {
         SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
             guard error == nil else {
-                print("error: \(error)")
+                print("error: \(String(describing: error))")
                 DispatchQueue.main.async {
                     let alert = NewYorkAlertController(title: "Error", message: "you do not have an active apple music subscription", style: .alert)
                     
@@ -195,14 +195,14 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
                            return
                       }
               
-            print("got user token: \(userToken)")
+            print("got user token: \(String(describing: userToken))")
             self.appleMusicAuthToken = userToken ?? ""
             completion(userToken!)
         }
     }
     func getAppleMusicplaylistInfo(id: String, completion: @escaping([JSON]) -> Void) {
         //fix later
-        var tmpStorefront = "us"
+        let tmpStorefront = "us"
         let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStorefront)/playlists/\(id)")!
         var musicRequest = URLRequest(url: musicURL)
         musicRequest.httpMethod = "GET"
@@ -235,7 +235,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
               let result = (json["data"]).array!
               let id = (result[0].dictionaryValue)["id"]!
               storefrontID = id.stringValue
-              print("got storefront id: \(storefrontID)")
+              print("got storefront id: \(String(describing: storefrontID))")
               completion(storefrontID)
           }
      }.resume()
@@ -312,7 +312,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         
 //        self.view.addSubview(playlistContentsTableView)
         playlistContentsTableView.alpha = 0
-        var y = 80+110+20+10+tmp+50
+        let y = 80+110+20+10+tmp+50
         playlistContentsTableView.frame = CGRect(x: 0, y: CGFloat(y), width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - CGFloat((y)))
     }
     func backupshowTransferPage(){
@@ -402,7 +402,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     let question = (componentspenis.last ?? "").components(separatedBy: "?")
                     let SpotifyURI = "spotify:playlist:" + (question.first ?? "")
                     
-                    getPlayListItemsFrom(uri: SpotifyURI ?? "", offset: 0)
+                    getPlayListItemsFrom(uri: SpotifyURI, offset: 0)
                     print("white girls")
                 DispatchQueue.main.async{
                     self.transferButton = self.createButton()
@@ -455,7 +455,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                                             DispatchQueue.main.async {
                                                 
                                                 if((results.images!.isNotEmpty)) {
-                                                    print("* USERS PROFILE PICS: \(results.images)")
+                                                    print("* USERS PROFILE PICS: \(String(describing: results.images))")
                                                     self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
                                                     self.playlistAuthorImage.fadeIn()
                                                     self.playlistAuthorImage.clipsToBounds = true
@@ -481,7 +481,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     //                            if(spotifySearchResults.count-1 >= 0) {
                                     if(results.images.isNotEmpty) {
                                         self.playlistImage.downloaded(from: results.images[0].url)
-                                        self.playlistCoverPhoto = results.images[0].url.absoluteString as! String
+                                        self.playlistCoverPhoto = results.images[0].url.absoluteString
                                         self.playlistImage.fadeIn()
                                     } else {
                                         //playlist doesnt have image -- show placeholder
@@ -501,7 +501,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 let str = textField.text ?? ""
                 if(str.contains("music.apple") && str.contains("playlist")){
                     let components = str.components(separatedBy: "/")
-                    var AppleURI = components.last
+                    let AppleURI = components.last
                     getAppleMusicplaylistInfo(id: AppleURI ?? "") { playlist in
                         DispatchQueue.main.async{
                             self.hideSearchResults()
@@ -639,7 +639,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                             DispatchQueue.main.async {
                                 
                                 if((results.images!.isNotEmpty)) {
-                                    print("* USERS PROFILE PICS: \(results.images)")
+                                    print("* USERS PROFILE PICS: \(String(describing: results.images))")
                                     self.playlistAuthorImage.downloaded(from: (results.images?.last?.url)!)
                                     self.playlistAuthorImage.fadeIn()
                                     self.playlistAuthorImage.clipsToBounds = true
@@ -658,14 +658,14 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                     )
                     .store(in: &self.cancellables)
                     
-                    print("*playlist description: \(spotifySearchResults[indexPath.row].description)")
+                    print("*playlist description: \(String(describing: spotifySearchResults[indexPath.row].description))")
                 }
                 
                 playlistImage.alpha = 0
                 if(spotifySearchResults.count-1 >= indexPath.row) {
                     if(spotifySearchResults[indexPath.row].images.isNotEmpty) {
                         playlistImage.downloaded(from: spotifySearchResults[indexPath.row].images[0].url)
-                        playlistCoverPhoto = spotifySearchResults[indexPath.row].images[0].url.absoluteString as! String
+                        playlistCoverPhoto = spotifySearchResults[indexPath.row].images[0].url.absoluteString
                         playlistImage.fadeIn()
                     } else {
                         //playlist doesnt have image -- show placeholder
@@ -729,8 +729,8 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             if(transferringFrom == "spotify") {
                 //SET LABELS AND SUCH
                 if(spotifySearchResults.count > indexPath.row) {
-                    cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
-                    cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
+                    cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name )
+                    cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "")
                     if(spotifySearchResults.count-1 <= indexPath.row) {
                         if(spotifySearchResults[indexPath.row].images.isNotEmpty && spotifySearchResults[indexPath.row] != nil) {
                             print("playlist images: \(spotifySearchResults[indexPath.row].images)")
@@ -747,9 +747,9 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
             } else {
 //                print("apple music row!")
                 if(appleMusicSearchResults.count > indexPath.row) {
-                    cell.playlistNameLabel.text = appleMusicSearchResults[indexPath.row].name as! String
+                    cell.playlistNameLabel.text = appleMusicSearchResults[indexPath.row].name
                     //fix this shit later
-                    cell.playlistCreaterLabel.text = (appleMusicSearchResults[indexPath.row].artistName ?? "") as! String
+                    cell.playlistCreaterLabel.text = (appleMusicSearchResults[indexPath.row].artistName )
                     cell.appleMusicPlaylistID = appleMusicSearchResults[indexPath.row].id
                     print("apple music playlistid: \(appleMusicSearchResults[indexPath.row].id)")
                     if(appleMusicSearchResults[indexPath.row].artworkURL != "") {
@@ -787,7 +787,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 cell.backgroundColor = .clear
                 cell.selectionStyle = .none
                 cell.trackLengthLabel.font = UIFont(name: "HypermarketW00-Regular", size: 14)
-                spotify_anonymous.track(playlistTracks[indexPath.row].uri as! String, market: "us").sink(
+                spotify_anonymous.track(playlistTracks[indexPath.row].uri!, market: "us").sink(
                     receiveCompletion: { completion in
                         
                     },
@@ -797,7 +797,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                             var txt = ""
                             cell.trackItem = results
                             if(results.album != nil) {
-                                print("playlist images: \(results.album?.images)")
+                                print("playlist images: \(String(describing: results.album?.images))")
                                 cell.trackImage.downloaded(from: (results.album?.images?[0].url)!)
                                 cell.trackImage.contentMode = .scaleAspectFill
                             } else {
@@ -1155,7 +1155,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
     func searchAppleMusicForSong(searchTerm: String, trackNum: Int, totalTracks: Int) {
         //you can change this to different countries
         let tmpStoreFront = "us"
-        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=songs&limit=1")!
+        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") )&types=songs&limit=1")!
         //        print("requesting url: \(musicURL)")
         var musicRequest = URLRequest(url: musicURL)
         musicRequest.httpMethod = "GET"
@@ -1224,7 +1224,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         var dataArray: [[String: Any]] = []
         var i = 0
         for son in appleMusicTransferPlaylist {
-            var temp: [String: Any] = [
+            let temp: [String: Any] = [
                 "data" : [
                     "id": son.id,
                     "type": "songs"
@@ -1243,7 +1243,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
         SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
             guard error == nil else {
-                print("error: \(error)")
+                print("error: \(String(describing: error))")
                 DispatchQueue.main.async {
                     let alert = NewYorkAlertController(title: "Error", message: "you do not have an active apple music subscription", style: .alert)
                     
@@ -1266,20 +1266,20 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                            return
                       }
               
-            print("got user token: \(userToken)")
+            print("got user token: \(String(describing: userToken))")
             self.appleMusicAuthToken = userToken ?? ""
-            musicRequest.addValue(self.appleMusicAuthToken as! String, forHTTPHeaderField: "Music-User-Token")
+            musicRequest.addValue(self.appleMusicAuthToken , forHTTPHeaderField: "Music-User-Token")
             URLSession.shared.dataTask(with: musicRequest) { [self] (data, response, error) in
                 guard error == nil else { return }
                 if let json = try? JSON(data: data!) {
                     print(json)
                     if(json["data"].array != nil) {
                         //got return data
-                        print("got data: \(data)")
+                        print("got data: \(String(describing: data))")
                         //use ID to show pop up to open in apple music
                         let id = json["data"]["id"].rawString()
                         //FINISH THIS PART
-                        let appleMusicPublicURL = "music://\(id as! String)"
+                        let appleMusicPublicURL = "music://\(id!)"
                         DispatchQueue.main.async {
                             self.backButton.isUserInteractionEnabled = true
                             self.transferButton.setTitle("finished transferring to itunes!", for: .normal)
@@ -1299,6 +1299,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
 
                             self.present(alert, animated: true)
     //                            self.addLoginPage1Elements()
+    // NOVEMBER 8th - LOGAN DEBUGGING STOPS HERE --------
                         }
                     }
                     
