@@ -80,6 +80,8 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     
     var playlistTracks : [PlaylistItem] = []
     var appleMusicTracks : [AppleMusicSong] = []
+    
+    var appleMusicTransferPlaylist : [AppleMusicSong] = []
 //    var appleMusic
     
     var spotify = SpotifyAPI(authorizationManager: AuthorizationCodeFlowManager(
@@ -729,15 +731,18 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
                 if(spotifySearchResults.count > indexPath.row) {
                     cell.playlistNameLabel.text = (spotifySearchResults[indexPath.row].name ?? "") as! String
                     cell.playlistCreaterLabel.text = (spotifySearchResults[indexPath.row].owner?.displayName ?? "") as! String
-                    if(spotifySearchResults[indexPath.row].images.isNotEmpty && spotifySearchResults[indexPath.row] != nil) {
-                        print("playlist images: \(spotifySearchResults[indexPath.row].images)")
-                        cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images.last!.url)
-                        cell.playlistCoverPhoto.contentMode = .scaleAspectFill
-                    } else {
-                        //playlist doesnt have image -- show placeholder
-                        cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
-                        cell.playlistCoverPhoto.contentMode = .scaleAspectFill
+                    if(spotifySearchResults.count-1 <= indexPath.row) {
+                        if(spotifySearchResults[indexPath.row].images.isNotEmpty && spotifySearchResults[indexPath.row] != nil) {
+                            print("playlist images: \(spotifySearchResults[indexPath.row].images)")
+                            cell.playlistCoverPhoto.downloaded(from: spotifySearchResults[indexPath.row].images.last!.url)
+                            cell.playlistCoverPhoto.contentMode = .scaleAspectFill
+                        } else {
+                            //playlist doesnt have image -- show placeholder
+                            cell.playlistCoverPhoto.downloaded(from: "https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png")
+                            cell.playlistCoverPhoto.contentMode = .scaleAspectFill
+                        }
                     }
+                    
                 }
             } else {
 //                print("apple music row!")
@@ -1147,42 +1152,200 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         }
         
     }
+    func searchAppleMusicForSong(searchTerm: String, trackNum: Int, totalTracks: Int) {
+        //you can change this to different countries
+        let tmpStoreFront = "us"
+        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=songs&limit=1")!
+        //        print("requesting url: \(musicURL)")
+        var musicRequest = URLRequest(url: musicURL)
+        musicRequest.httpMethod = "GET"
+        musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
+        //            musicRequest.addValue(userToken, forHTTPHeaderField: "Music-User-Token")
+        
+        URLSession.shared.dataTask(with: musicRequest) { [self] (data, response, error) in
+            guard error == nil else { return }
+            if let json = try? JSON(data: data!) {
+                //                            print(json)
+                
+//                if((json["results"]["playlists"]["data"]).array != nil) {
+//                    self.appleMusicSearchResults.removeAll()
+//                    let result = (json["results"]["playlists"]["data"]).array!
+//                    for song in result {
+//                        let attributes = song["attributes"]
+//                        let currentSong = AppleMusicSong(id: attributes["playParams"]["id"].string ?? "", name: attributes["name"].string ?? "", artistName: attributes["curatorName"].string ?? "", artworkURL: attributes["artwork"]["url"].string ?? "", length:  TimeInterval(Double(0)))
+//                        //                            songs.append(currentSong)
+//                        self.appleMusicSearchResults.append(currentSong)
+//                    }
+//                    DispatchQueue.main.async {
+//                        self.searchResultsViewController.reloadData()
+//                        //                                    self.searchResultsViewController.fadeIn()
+//                    }
+//                }
+                if(json["results"]["songs"]["data"].array != nil) {
+                    let song = json["results"]["songs"]["data"][0]
+                    if(song["attributes"]["name"].stringValue != "") {
+                        let temp = AppleMusicSong(id: song["id"].stringValue, name: song["attributes"]["name"].stringValue, artistName: song["attributes"]["artistName"].stringValue, artworkURL: song["attributes"]["artwork"]["url"].stringValue, length: song["attributes"]["durationInMillis"].doubleValue)
+                        appleMusicTransferPlaylist.append(temp)
+                        print("found song: \(json["results"]["songs"]["data"][0]["attributes"]["name"].stringValue)")
+                    }
+                    
+                    
+                }
+                DispatchQueue.main.async {
+                    if let buttonTitle = self.transferButton.title(for: .normal) {
+                        if(buttonTitle.contains("finish")) {
+                            
+                        } else {
+                            self.transferButton.setTitle("transferring from \(self.transferringFrom) (\(trackNum)/\(totalTracks))", for: .normal)
+                        }
+                      }
+                    
+                }
+//                print("JSON RESULT")
+                
+//                print(json)
+                if trackNum == totalTracks-1 {
+                    DispatchQueue.main.async {
+                        createAppleMusicPlaylistWith(name: playlistTitleLabel.text ?? "", description: playlistDescription.text ?? "", tracks: appleMusicTransferPlaylist)
+                    }
+                    
+                }
+            } else {
+                //                        lock.signal()
+            }
+        }.resume()
+    }
+    func createAppleMusicPlaylistWith(name: String, description: String, tracks: [AppleMusicSong]) {
+        appleMusicTransferPlaylist.removeAll()
+        print("creating apple music playlist")
+        let musicURL = URL(string: "https://api.music.apple.com/v1/me/library/playlists")!
+        var musicRequest = URLRequest(url: musicURL)
+        musicRequest.httpMethod = "POST"
+        var dataArray: [[String: Any]] = []
+        var i = 0
+        for son in appleMusicTransferPlaylist {
+            var temp: [String: Any] = [
+                "data" : [
+                    "id": son.id,
+                    "type": "songs"
+                ]
+            ]
+            dataArray.append(temp)
+            i=i+1
+        }
+        let createPlaylistBody: [String: Any] = [
+            "attributes":[
+                "name": name,
+                "description":description
+            ]
+        ]
+        musicRequest.httpBody = createPlaylistBody.percentEncoded()
+        musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
+        SKCloudServiceController().requestUserToken(forDeveloperToken: developerToken) { (userToken, error) in
+            guard error == nil else {
+                print("error: \(error)")
+                DispatchQueue.main.async {
+                    let alert = NewYorkAlertController(title: "Error", message: "you do not have an active apple music subscription", style: .alert)
+                    
+                    let cancel = NewYorkButton(title: "ok", style: .cancel)
+                    
+                    alert.addButton(cancel)
+                    self.iTunesImage.removeFromSuperview()
+                    self.chooseService.removeFromSuperview()
+                    self.spotifyImage.removeFromSuperview()
+                    self.iTunesButton.removeFromSuperview()
+                    self.spotifyButton.removeFromSuperview()
+                    self.continueButton.removeFromSuperview()
+                    self.backButton.fadeOut()
+                    self.currentStep = "choose_service"
+                    self.present(alert, animated: true)
+//                    self.addLoginPage1Elements()
+//                    self.playVideo(from: "Mobile_Web_BG.m4v")
+                }
+                
+                           return
+                      }
+              
+            print("got user token: \(userToken)")
+            self.appleMusicAuthToken = userToken ?? ""
+            musicRequest.addValue(self.appleMusicAuthToken as! String, forHTTPHeaderField: "Music-User-Token")
+            URLSession.shared.dataTask(with: musicRequest) { [self] (data, response, error) in
+                guard error == nil else { return }
+                if let json = try? JSON(data: data!) {
+                    print(json)
+                    if(json["data"].array != nil) {
+                        //got return data
+                        print("got data: \(data)")
+                        //use ID to show pop up to open in apple music
+                        let id = json["data"]["id"].rawString()
+                        //FINISH THIS PART
+                        let appleMusicPublicURL = "music://\(id as! String)"
+                        DispatchQueue.main.async {
+                            self.backButton.isUserInteractionEnabled = true
+                            self.transferButton.setTitle("finished transferring to itunes!", for: .normal)
+    //                            self.transferButton.setTitle("finished transferring to spotify", for: .normal)
+                            let alert = NewYorkAlertController(title: "Transfer Successful", message: "'\(self.playlistTitleLabel.text!)' finished transferring \(self.songQueue.count-1) songs", style: .alert)
+                            
+                            let cancel = NewYorkButton(title: "cancel", style: .cancel)
+                            let openInSpotify = NewYorkButton(title: "open in itunes", style: .default) { _ in
+    //                                print("Tapped OK")
+                                if let url = URL(string: appleMusicPublicURL) {
+                                    print("opening to \(url)")
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                            alert.addButton(cancel)
+                            alert.addButton(openInSpotify)
+
+                            self.present(alert, animated: true)
+    //                            self.addLoginPage1Elements()
+                        }
+                    }
+                    
+                    
+                } else {
+                    //                        lock.signal()
+                }
+            }.resume()
+        }
+        
+    }
     func searchAppleMusic(searchTerm: String) {
         //you can change this to different countries
         let tmpStoreFront = "us"
-//            print("https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")
-            let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")!
-    //        print("requesting url: \(musicURL)")
-                    var musicRequest = URLRequest(url: musicURL)
-                    musicRequest.httpMethod = "GET"
-            musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
-//            musicRequest.addValue(userToken, forHTTPHeaderField: "Music-User-Token")
-                    
-            URLSession.shared.dataTask(with: musicRequest) { [self] (data, response, error) in
-                        guard error == nil else { return }
-                        if let json = try? JSON(data: data!) {
-//                            print(json)
-                            
-                            if((json["results"]["playlists"]["data"]).array != nil) {
-                                self.appleMusicSearchResults.removeAll()
-                                let result = (json["results"]["playlists"]["data"]).array!
-                                for song in result {
-                                    let attributes = song["attributes"]
-                                    let currentSong = AppleMusicSong(id: attributes["playParams"]["id"].string ?? "", name: attributes["name"].string ?? "", artistName: attributes["curatorName"].string ?? "", artworkURL: attributes["artwork"]["url"].string ?? "", length:  TimeInterval(Double(0)))
-        //                            songs.append(currentSong)
-                                    self.appleMusicSearchResults.append(currentSong)
-                                }
-                                DispatchQueue.main.async {
-                                    self.searchResultsViewController.reloadData()
-//                                    self.searchResultsViewController.fadeIn()
-                                }
-                            }
-                            
-                            
-                        } else {
-    //                        lock.signal()
-                        }
-                    }.resume()
+        //            print("https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")
+        let musicURL = URL(string: "https://api.music.apple.com/v1/catalog/\(tmpStoreFront)/search?term=\((searchTerm.replacingOccurrences(of: " ", with: "+").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "") as! String)&types=playlists&limit=15")!
+        //        print("requesting url: \(musicURL)")
+        var musicRequest = URLRequest(url: musicURL)
+        musicRequest.httpMethod = "GET"
+        musicRequest.addValue("Bearer \(self.developerToken)", forHTTPHeaderField: "Authorization")
+        //            musicRequest.addValue(userToken, forHTTPHeaderField: "Music-User-Token")
+        
+        URLSession.shared.dataTask(with: musicRequest) { [self] (data, response, error) in
+            guard error == nil else { return }
+            if let json = try? JSON(data: data!) {
+                //                            print(json)
+                
+                if((json["results"]["playlists"]["data"]).array != nil) {
+                    self.appleMusicSearchResults.removeAll()
+                    let result = (json["results"]["playlists"]["data"]).array!
+                    for song in result {
+                        let attributes = song["attributes"]
+                        let currentSong = AppleMusicSong(id: attributes["playParams"]["id"].string ?? "", name: attributes["name"].string ?? "", artistName: attributes["curatorName"].string ?? "", artworkURL: attributes["artwork"]["url"].string ?? "", length:  TimeInterval(Double(0)))
+                        //                            songs.append(currentSong)
+                        self.appleMusicSearchResults.append(currentSong)
+                    }
+                    DispatchQueue.main.async {
+                        self.searchResultsViewController.reloadData()
+                        //                                    self.searchResultsViewController.fadeIn()
+                    }
+                }
+                
+                
+            } else {
+                //                        lock.signal()
+            }
+        }.resume()
         
         
     }
@@ -1222,7 +1385,7 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         //                       self.spotify.playlistItems(bestResult)
                                 print("******************************************************")
         //                        print(bestResult)
-        //                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: <#T##Int?#>, offset: <#T##Int?#>, market: <#T##String?#>)
+        //                        spotify.playlistItems(uri as! SpotifyURIConvertible, limit: sear, offset: <#T##Int?#>, market: <#T##String?#>)
         //                        self.getPlayListItemsFrom(uri: uri, offset: 0)
                                 print("search length: \(results.playlists!.items.count)")
                                 self.spotifySearchResults = []
@@ -1632,6 +1795,11 @@ func fetchStorefrontID(userToken: String, completion: @escaping(String) -> Void)
         transferButton.isUserInteractionEnabled = false
         self.backButton.isUserInteractionEnabled = false
         if(transferringFrom == "spotify") {
+            var i = 0
+            for trackz in self.playlistTracks {
+                i=i+1
+                searchAppleMusicForSong(searchTerm: trackz.name, trackNum: i, totalTracks: self.playlistTracks.count)
+            }
             
         }
         else {
@@ -2033,4 +2201,26 @@ extension TimeInterval {
     var millisecond: Int {
         Int((self*1000).truncatingRemainder(dividingBy: 1000))
     }
+}
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+        .joined(separator: "&")
+        .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
 }
