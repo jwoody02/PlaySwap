@@ -1,0 +1,4 @@
+${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AnimatedGradientView.framework
+${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework
+${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NewYorkAlert.framework
+${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RAGTextField.framework

@@ -1,6 +1,0 @@
-framework module Pods_PlaySwap {
-  umbrella header "Pods-PlaySwap-umbrella.h"
-
-  export *
-  module * { export * }
-}

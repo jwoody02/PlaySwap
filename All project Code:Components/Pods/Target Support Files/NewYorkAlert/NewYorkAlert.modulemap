@@ -1,0 +1,6 @@
+framework module NewYorkAlert {
+  umbrella header "NewYorkAlert-umbrella.h"
+
+  export *
+  module * { export * }
+}
