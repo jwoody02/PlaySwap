@@ -107,7 +107,7 @@ class ViewController: UIViewController, WKNavigationDelegate, UITableViewDelegat
     var currentStep = "choose_service"
     
 //    ITUNES API KEY
-    let developerToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjU2NUNRMzg2NjUifQ.eyJpc3MiOiJaUkdVNTZGSDRMIiwiZXhwIjoxNjQ5ODQzODU5LCJpYXQiOjE2MzQwNzU4NTl9.Em7ap9NGQiLQp3cOU0kuccIPwDpXwQJAHzwkhPd7RPoFncnINUNCjnV6uxzVCS9MK0YOok3Rpa2ghVu7roFk7A"
+    let developerToken = "nice try bucko"
     var appleMusicAuthToken = ""
     var appleMusicStoreFrontID = ""
     
